@@ -1,1 +1,0 @@
-web: java -jar target/assetc-1.0.jar
