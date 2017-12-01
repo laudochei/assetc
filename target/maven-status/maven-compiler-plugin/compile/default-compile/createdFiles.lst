@@ -7,7 +7,6 @@ assetc\service\UserService.class
 assetc\controller\AssetController.class
 assetc\api\Suppliers.class
 assetc\data\BuildDaoImpl.class
-assetc\controller\AjaxController.class
 assetc\data\BuildDaoImpl$1.class
 assetc\model\Asset.class
 assetc\api\Products.class
