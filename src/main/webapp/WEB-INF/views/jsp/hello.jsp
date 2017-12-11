@@ -46,7 +46,8 @@
     <a href="<c:url value="/uploads/uploadslist" />">Uploads</a>|
     <a href="<c:url value="/builds/asset" />">Asset Build</a>|
     <a href="<c:url value="/builds/treeview" />">Tree View</a>|
-    <a href="<c:url value="/userlist/addAjaxList" />">Ajax</a>
+    <a href="<c:url value="/userlist/addAjaxList" />">Ajax</a>|
+    <a href="<c:url value="/db/showdb" />">DB-Tasks</a>
     
     
     
