@@ -11,7 +11,8 @@
         
         Statement stmt = con.createStatement();
         //stmt.executeUpdate("CREATE TABLE IF NOT EXISTS ticks (tick timestamp)");
-        
+
+	stmt.executeUpdate("DROP TABLE IF EXISTS users, user_roles");        
         stmt.executeUpdate("CREATE TABLE IF NOT EXISTS users (userid int(11) NOT NULL AUTO_INCREMENT, username varchar(45) NOT NULL, password varchar(45) NOT NULL, firstname varchar(45) DEFAULT NULL, lastname varchar(45) DEFAULT NULL, email varchar(45) DEFAULT NULL, address varchar(45) DEFAULT NULL, phone int(10) DEFAULT NULL, enabled tinyint(4) NOT NULL DEFAULT '1', PRIMARY KEY (username), UNIQUE KEY userid_UNIQUE (userid))ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8");
         //stmt.executeUpdate("CREATE TABLE IF NOT EXISTS user_roles2 (userid int(11) NOT NULL AUTO_INCREMENT, username varchar(45) NOT NULL, password varchar(45) NOT NULL, firstname varchar(45) DEFAULT NULL, lastname varchar(45) DEFAULT NULL, email varchar(45) DEFAULT NULL, address varchar(45) DEFAULT NULL, phone int(10) DEFAULT NULL, enabled tinyint(4) NOT NULL DEFAULT '1', PRIMARY KEY (username), UNIQUE KEY userid_UNIQUE (userid))ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8");
         
@@ -20,9 +21,9 @@
 
 
         //stmt.executeUpdate("INSERT INTO ticks VALUES (now())");
-        //stmt.executeUpdate("INSERT INTO users2 (userid, username, password, firstname, lastname, email, address, phone, enabled) VALUES (15, 'mkdons1', '123456', 'mkyong', 'stormzy', 'stormzy@yaddenergy.no', 'aberdeen', 1234, 1)");
+        //stmt.executeUpdate("INSERT INTO users2 (userid, username, password, firstname, lastname, email, address, phone, enabled) VALUES (1, 'mkdons1', '123456', 'mkyong', 'stormzy', 'stormzy@yaddenergy.no', 'aberdeen', 1234, 1)");
         stmt.executeUpdate("INSERT INTO users (username, password, firstname, lastname, email, address, phone, enabled) VALUES ('mkyong', '123456', 'mkyong', 'stormzy', 'stormzy@yaddenergy.no', 'aberdeen', 1234, 1)");        
-        stmt.executeUpdate("INSERT INTO user_roles (user_role_id, username, role) VALUES (1, 'mkyong', 'admin')");
+        stmt.executeUpdate("INSERT INTO user_roles (user_role_id, username, role) VALUES (1, 'mkyong', 'ROLE_ADMIN')");
         
         
         //ResultSet rs = stmt.executeQuery("SELECT * FROM users");
