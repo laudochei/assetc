@@ -5,16 +5,18 @@
  */
 package assetc.controller;
 
-import assetc.service.UserService;
-import assetc.validator.UserFormValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Map;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -31,8 +33,15 @@ public class DBControlller {
 	// db display
 	@RequestMapping(value = "/showdb", method=GET)
         public String showDb(Model model) {
-            return "testdb_1";
+            return "testdb11";
         }
+        
+        // db display
+	@RequestMapping(value = "/createdb", method=GET)
+        public String createDb(Model model) {
+            return "testdb33";
+        }
+        
 }
 
 

@@ -48,6 +48,7 @@
     <a href="<c:url value="/builds/treeview" />">Tree View</a>|
     <a href="<c:url value="/userlist/addAjaxList" />">Ajax</a>|
     <a href="<c:url value="/db/showdb" />">DB-Tasks</a>
+    <a href="<c:url value="/db/createdb" />">CreateDB</a>
     
     
     

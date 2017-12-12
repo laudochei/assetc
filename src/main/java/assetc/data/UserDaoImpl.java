@@ -55,6 +55,7 @@ public class UserDaoImpl implements UserDao {
 
 		//String sql = "SELECT * FROM users";
                 String sql = "SELECT * FROM users";
+                //String sql = "SELECT * FROM ticks";
 		List<User> result = namedParameterJdbcTemplate.query(sql, new UserMapper());
 
 		return result;
@@ -93,7 +94,9 @@ public class UserDaoImpl implements UserDao {
         
         @Override
         public User validateUser(Login login) {
-            String sql = "select * from users where username='" + login.getUsername() + "' and password='" + login.getPassword() + "'" ;
+            //String sql = "select * from users where username='" + login.getUsername() + "' and password='" + login.getPassword() + "'" ;
+            String sql = "select * from ticks where username='" + login.getUsername() + "' and password='" + login.getPassword() + "'" ;
+            
             List<User> users = namedParameterJdbcTemplate.query(sql, new UserMapper());
             return users.size() > 0 ? users.get(0) : null;  
         }
