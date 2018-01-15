@@ -6,9 +6,7 @@
     <jsp:include page="../fragments/headergeneral.jsp" />
     <head>
     <title>Add Energy</title>
-    <link rel="stylesheet" 
-          type="text/css" 
-          href="<c:url value="/resources/style.css" />" >
+    <link rel="stylesheet" type="text/css" href="<c:url value="/resources/style.css" />" >
   </head>
 <body>
 	<h1>Title : ${title}</h1>
@@ -42,22 +40,20 @@
     <a href="<c:url value="/admin/list" />">Admin</a>|
     <a href="<c:url value="/assets/assetlist" />">Asset</a>|
     <a href="<c:url value="/locations/locationlist" />">Location</a>|
-    <a href="<c:url value="/reports/reportlist" />">Reports</a>|
-    <a href="<c:url value="/uploads/uploadslist" />">Uploads</a>|
+    <a href="<c:url value="/integration//restapi3" />">Location-REST</a>|
+    <a href="<c:url value="/employees/employeeslist" />">Employee</a>|
+    <a href="<c:url value="/integrate/display/restapi" />">Integrate</a>|
     <a href="<c:url value="/builds/asset" />">Asset Build</a>|
     <a href="<c:url value="/builds/treeview" />">Tree View</a>|
     <a href="<c:url value="/userlist/addAjaxList" />">Ajax</a>|
-    <a href="<c:url value="/db/showdb" />">DB-Tasks</a>
-    <a href="<c:url value="/db/createdb" />">CreateDB</a>
+    <a href="<c:url value="/db/showdb" />">DB-Tasks</a>|
+    <a href="<c:url value="/db/createdb" />">CreateDB</a>|
+    <a href="<c:url value="/books/detail" />">Check View</a>|
+    <a href="<c:url value="/integration/display/restapi" />">REST-API</a>|
+    <a href="<c:url value="/ajaxcalls/display" />">AJAX CALLS</a>
     
-    
-    
+   
 <jsp:include page="../fragments/footergeneral.jsp" />
-
-
-
-
-
 
 
 </body>

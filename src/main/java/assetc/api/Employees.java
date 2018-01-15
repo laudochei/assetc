@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
-import assetc.repository.EmployeeRepository;
-import assetc.model.Employee;
+import assetc.repository.EmployeeRepository1;
+import assetc.model.Employee22;
 
 /**
  * Servlet implementation class Employees
@@ -21,7 +21,7 @@ public class Employees extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 	// employee repository class
-	private EmployeeRepository _repository = null;
+	private EmployeeRepository1 _repository = null;
 	private Gson _gson = null;
 	
     /**
@@ -39,7 +39,7 @@ public class Employees extends HttpServlet {
     
     	// create a new instance of the repository class. pass in the path to the data/sample.db
     	// file which we can get by getting the servlet context, then calling 'getRealPath'
-    	_repository = new EmployeeRepository(this.getServletContext().getRealPath("data/sample.db"));
+    	_repository = new EmployeeRepository1(this.getServletContext().getRealPath("data/sample.db"));
     }
 
 	/**

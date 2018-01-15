@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package assetc.repository;
+package assetc.model;
 
 /**
  *
- * @author laud.ochei
+ * @author Laud.Ochei
  */
-public class EmployeeRepository {
+public class Employee1 {
     
 }

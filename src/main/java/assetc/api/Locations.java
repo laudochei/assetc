@@ -8,24 +8,26 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
-import assetc.repository.EmployeeRepository1;
-
+import assetc.model.Location;
+import assetc.repository.LocationRepository;
 
 /**
  * Servlet implementation class Employees
  */
-@WebServlet(description = "A servlet to return data about employees from the database", urlPatterns = { "/api/dragdrop" })
-public class DragDrop extends HttpServlet {
+//@WebServlet(description = "A servlet to return data about employees from the database", urlPatterns = { "/builds/api/employees" })
+
+@WebServlet(description = "A servlet to return data about employees from the database", urlPatterns = { "/builds/asset/api/locations" })
+public class Locations extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 	// employee repository class
-	private EmployeeRepository1 _repository = null;
+	private LocationRepository _repository = null;
 	private Gson _gson = null;
 	
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public DragDrop() {
+    public Locations() {
         super();
         
         // initialize the Gson library
@@ -37,7 +39,7 @@ public class DragDrop extends HttpServlet {
     
     	// create a new instance of the repository class. pass in the path to the data/sample.db
     	// file which we can get by getting the servlet context, then calling 'getRealPath'
-    	_repository = new EmployeeRepository1(this.getServletContext().getRealPath("data/sample.db"));
+    	_repository = new LocationRepository(this.getServletContext().getRealPath("data/sample.db"));
     }
 
 	/**
@@ -49,19 +51,31 @@ public class DragDrop extends HttpServlet {
 			System.out.println(request.getParameter(""));
 			
 			// get the managerId off of the request
-			int managerId = request.getParameter("EmployeeID") == null ? 0 : Integer.parseInt(request.getParameter("EmployeeID"));
+			//String managerId = request.getParameter("EmployeeID") == null ? 0 : request.getParameter("EmployeeID");
+                        String managerId = request.getParameter("locationid") == null ? "0" : request.getParameter("locationid");
+                        
+                        
+//                        String managerId = "0";
+//                        if (request.getParameter("EmployeeID")== null || request.getParameter("EmployeeID").trim().equals("")) {
+//                            managerId = request.getParameter("EmployeeID");
+//                        }
+                       
 			
+                        //int managerId = request.getParameter("EmployeeID") == null ? 0 : Integer.parseInt(request.getParameter("EmployeeID"));
+			
+                        
 			System.out.println(managerId);
 			
 			// get the employees from the database
-			int updatetree = _repository.updatetreeview(managerId);
+			//List<assetc.model.Employee> employees = _repository.listEmployees(managerId);
+                        
+                        List<assetc.model.Employee> employees = _repository.listEmployees(managerId);
 			
 			// set the content type we are sending back as JSON
 			response.setContentType("application/json"); 
 			
 			// convert the list to json and write it to the response
-			response.getWriter().print(_gson.toJson(updatetree));
-                        
+			response.getWriter().print(_gson.toJson(employees));
 			
 		} catch (Exception e) {
 			e.printStackTrace();

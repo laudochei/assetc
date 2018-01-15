@@ -22,7 +22,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import org.springframework.web.servlet.ModelAndView;
 
 
-
 @Controller
 @RequestMapping(value = "/builds")
 public class BuildController {
@@ -90,6 +89,13 @@ public class BuildController {
             return "dragdrop";
         }
         
+        
+        
+        @RequestMapping(value = "/asset/treeview_live", method=GET)
+        public String showTreeViewLive(Model model) {
+           
+            return "treeview_live";
+        }
         
         
         

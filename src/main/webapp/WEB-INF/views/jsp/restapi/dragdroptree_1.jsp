@@ -1,9 +1,28 @@
+<%@page import="org.springframework.dao.DataAccessException"%>
 <%@ page import="java.sql.*" %>
 <%@ page import="assetc.model.Employee"%>
+<%@ page import="assetc.config.DataConfig"%>
+<%@ page import="org.springframework.jdbc.core.namedparam.MapSqlParameterSource"%>
+<%@ page import="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate"%>
+<%@ page import="org.springframework.jdbc.core.namedparam.SqlParameterSource"%>
+<%@ page import="org.springframework.beans.factory.annotation.Autowired"%>
 
 <%
-        int p = Integer.parseInt(request.getParameter("p")); //11;
-        int q = Integer.parseInt(request.getParameter("q")); // 14;
+        
+        //NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+	@Autowired
+	public void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate) throws DataAccessException {
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+	}
+        
+        
+//int p = Integer.parseInt(request.getParameter("p")); //11;
+        //int q = Integer.parseInt(request.getParameter("q")); // 14;
+        
+        
+        String p = request.getParameter("p");
+        String q = request.getParameter("q");
         
         
         int EmployeeID = 0;
@@ -48,7 +67,7 @@
                
         // map the parameters into the query
         //stmt.setInt(1, ManagerID);
-        stmt.setInt(1, q);
+        stmt.setString(1, "q");
         stmt.setString(2, Lastname);
         stmt.setString(3, Firstname);
         stmt.setString(4, Fullname);

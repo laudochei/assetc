@@ -12,6 +12,7 @@ public interface LocationService {
     
     List<Location> findAllLocation();
     Location findByLocationno(Integer locationno);
+    Location findByLocationid(String locationid);
     void deleteLocation(Integer locationno);
     void saveLocation(Location location);
     void updateLocation(Location location);
@@ -20,5 +21,6 @@ public interface LocationService {
     //Location validateLocation(Location loc);
     int validateLocation(Location location);
     int checkAction(Integer actionno);
+    void dragdrop(Location location, String locationid, String parentname);
     
 }

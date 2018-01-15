@@ -45,6 +45,8 @@ public class Location {
     private String serialnum;	
     private String customfield;
     
+    private Boolean HasChildren;
+    
     public boolean isNew() {
 		return (this.locationno == null);
     }
@@ -229,6 +231,14 @@ public class Location {
 
     public void setCustomfield(String customfield) {
         this.customfield = customfield;
+    }
+    
+    public Boolean getHasChildren() {
+		return HasChildren;
+    }
+
+    public void setHasChildren(Boolean hasChildren) {
+		HasChildren = hasChildren;
     }
 
   

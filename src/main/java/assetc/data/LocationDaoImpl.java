@@ -44,13 +44,36 @@ public class LocationDaoImpl implements LocationDao {
 		}
 		return result;
 	}
+        
+        
+        @Override
+	public Location findById(String locationid) {
 
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("locationid", locationid);
+		String sql = "SELECT * FROM location WHERE locationid=:locationid";
+		Location result = null;
+		try {
+			result = namedParameterJdbcTemplate.queryForObject(sql, params, new LocationMapper());
+		} catch (EmptyResultDataAccessException e) {
+			// do nothing, return null
+		}
+                return result;
+                
+                
+               
+                
+                
+                
+                
+	}
+
+        
+        
 	@Override
 	public List<Location> findAll() {
-
 		String sql = "select * from location order by locationno";
 		List<Location> result = namedParameterJdbcTemplate.query(sql, new LocationMapper());
-
 		return result;
 
 	}
@@ -97,7 +120,22 @@ public class LocationDaoImpl implements LocationDao {
             namedParameterJdbcTemplate.update(sql, getSqlParameterByModel(location));
             
 	}
-                
+        @Override
+	public Location updateSingleLocation(Integer locationno, Location location) {
+            
+            String sql = "UPDATE LOCATION SET LOCATIONNO=:locationno, PARENTNAME=:parentname, DESCRIPTION=:description, LONGDESCRIPTION=:longdescription, PARENTCRAFT=:parentcraft, CRAFT=:craft, EQUIPMENTTYPE=:equipmenttype, FAILURECODE=:failurecode, SYSTEMSTATUS=:systemstatus, USERSTATUS=:userstatus, CRITICALITY=:criticality, CO=:co, SUD=:sud, PLANNINGPLANT=:planningplant, MAINTENANCEPLANT=:maintenanceplant, PHYSICALLOCATION=:physicallocation, MANUFACTURER=:manufacturer, PARTNUM=:partnum, MODELNUM=:modelnum, SERIALNUM=:serialnum, CUSTOMFIELD=:customfield WHERE locationid=:locationid";
+            namedParameterJdbcTemplate.update(sql, getSqlParameterByModel(location));
+            
+            return null;
+	}
+        
+        
+        @Override
+	public void dragdrop(Location location, String locationid, String parentname) {
+             String sql = "UPDATE LOCATION SET LOCATIONNO=:locationno, PARENTNAME= parentname WHERE locationid=locationid";
+            namedParameterJdbcTemplate.update(sql, getSqlParameterByModel(location));
+            
+	}
         
               
         

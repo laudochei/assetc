@@ -14,10 +14,11 @@
         <a href="<c:url value="/builds/asset/tableview" />">Table View</a>|
         <a href="<c:url value="/builds/asset/treeview" />">Tree View</a>|
         <a href="<c:url value="/builds/asset/deletenode" />">Delete</a>|
-        
-        <a href="<c:url value="/builds/asset/testAjax" />">Ajax Call</a>
-        
-        
+        <a href="<c:url value="/builds/asset/testAjax" />">Ajax Call</a>|
+        <a href="<c:url value="/builds/asset/treeview_live" />">Tree View-Live</a>|
+        <a href="<c:url value="/builds/asset/tableview_live" />">Table View-Live</a>|
+        <a href="<c:url value="/display/viewtree" />">View Tree</a>|
+        <a href="<c:url value="/display/viewtable" />">View Table</a>
     
     </body>
 </html>

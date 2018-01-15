@@ -103,5 +103,21 @@ public class HomeController {
         
         
         
+//        @RequestMapping(value = "/books/detail", method = RequestMethod.GET)
+//	public ModelAndView bookdetail() {
+//
+//		ModelAndView model = new ModelAndView();
+//		//model.addObject("title", "Spring Security Login Form - Database Authentication");
+//		//model.addObject("message", "This is default page!");
+//		model.setViewName("detail");
+//		return model;
+//
+//	}
+        
+        @RequestMapping(value = "/books/detail", method=GET)
+        public String showAllBuild(Model model) {
+           
+            return "detail";
+        }
         
 }

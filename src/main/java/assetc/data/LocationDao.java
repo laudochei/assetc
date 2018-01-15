@@ -16,6 +16,7 @@ import java.util.List;
 public interface LocationDao {
     
         Location findByNo(Integer locationno);
+        Location findById(String locationid);
 	List<Location> findAll();
 	void saveLocation(Location location);
         
@@ -27,7 +28,8 @@ public interface LocationDao {
         
         //Location validateLocation(Location loc);
         
-       
+       void dragdrop(Location location, String locationid, String parentname);
+       Location updateSingleLocation(Integer locationno, Location location);
         
         
     

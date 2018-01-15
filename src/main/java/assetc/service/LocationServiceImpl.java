@@ -42,6 +42,10 @@ public class LocationServiceImpl implements LocationService {
             return locationDao.findByNo(locationno);
         }
         
+        @Override
+        public Location findByLocationid(String locationid) {    
+            return locationDao.findById(locationid);
+        }
         
         @Override
         public int checkAction(Integer actionno) {
@@ -115,4 +119,12 @@ public class LocationServiceImpl implements LocationService {
             }
             return op;
         }
+        
+        
+        @Override
+	public void dragdrop(Location location, String locationid, String parentname){
+            locationDao.dragdrop(location, locationid, parentname);
+            
+        }
+        
 }

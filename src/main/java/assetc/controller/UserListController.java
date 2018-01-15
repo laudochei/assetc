@@ -32,6 +32,22 @@ public class UserListController {
     }
 
     @RequestMapping(value="/addAjaxList",method=RequestMethod.POST)
+    public @ResponseBody String addUser(@ModelAttribute(value="user") UserList user, BindingResult result, final RedirectAttributes redirectAttributes ){
+    //public String addUser(@ModelAttribute(value="user") UserList user, BindingResult result, final RedirectAttributes redirectAttributes ){
+        
+        String returnText;
+        if(!result.hasErrors()){
+            userList.add(user);
+            returnText = "User has been added to the list. Total number of users are " + userList.size();
+        }else{
+            returnText = "Sorry, an error has occur. User has not been added to list.";
+        }
+        return returnText;
+        //return "redirect:/userlist/showAjaxList";
+    }
+
+    /*
+    @RequestMapping(value="/addAjaxList",method=RequestMethod.POST)
     //public @ResponseBody String addUser(@ModelAttribute(value="user") UserList user, BindingResult result, final RedirectAttributes redirectAttributes ){
     public String addUser(@ModelAttribute(value="user") UserList user, BindingResult result, final RedirectAttributes redirectAttributes ){
         
@@ -45,7 +61,9 @@ public class UserListController {
         //return returnText;
         return "redirect:/userlist/showAjaxList";
     }
-
+    */
+    
+    
     @RequestMapping(value="/showAjaxList")
     public String showUsers(ModelMap model){
         model.addAttribute("Users", userList);
