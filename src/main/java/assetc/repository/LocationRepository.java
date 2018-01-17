@@ -18,9 +18,9 @@ public class LocationRepository {
 	private Connection _conn = null;
 	//java.sql.Statement com = null;
 	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
-	static final String DB_URL = "jdbc:mysql://localhost:3306/assetc";
-	static final String USER = "root";
-	static final String PASS = "welcome123";
+	static final String DB_URL = "jdbc:mysql://us-cdbr-iron-east-05.cleardb.net:3306/heroku_7ac45a05bab0085";
+	static final String USER = "b4778f9d520c68";
+	static final String PASS = "132d6c92";
 	
 	
 	public LocationRepository() { }
