@@ -12,8 +12,8 @@ public interface UserDao {
 	void save(User user);
 	void update(User user);
 	void delete(Integer userid);
-        User validateUser(Login login);
-        int UserExists(String username);
+     	User validateUser(Login login);
+      int UserExists(String username);
         
    
 }
