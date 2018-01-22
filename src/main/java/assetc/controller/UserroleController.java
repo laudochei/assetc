@@ -1,5 +1,9 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package assetc.controller;
-
 
 import assetc.model.Asset;
 import assetc.model.User;
@@ -18,8 +22,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/userapi")
-public class UserController {
+@RequestMapping(value = "/userroleapi")
+public class UserroleController {
 
 	
 

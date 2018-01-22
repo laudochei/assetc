@@ -59,19 +59,26 @@ public class LocationDaoImpl implements LocationDao {
 			// do nothing, return null
 		}
                 return result;
-                
-                
-               
-                
-                
-                
-                
+           
 	}
-
+        
+        
+        
+        // this function returns all the children of a particular node
+        @Override
+	public List<Location> findAllChild(String locationid) {
+            String sql = "select * from location where parentname='" + locationid + "'" ;
+            List<Location> result = namedParameterJdbcTemplate.query(sql, new LocationMapper());
+            return result;
+        }
+        
+        
         
         
 	@Override
 	public List<Location> findAll() {
+                //String sql = "SELECT CONCAT( REPEAT(' ', COUNT(parent.locationid) - 1), node.locationid) AS name FROM location AS node, location AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt GROUP BY node.locationid ORDER BY node.lft";
+                
 		String sql = "select * from location order by locationno";
 		List<Location> result = namedParameterJdbcTemplate.query(sql, new LocationMapper());
 		return result;
@@ -169,6 +176,12 @@ public class LocationDaoImpl implements LocationDao {
 
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
                 
+                paramSource.addValue("lft", location.getLft());
+                paramSource.addValue("rgt", location.getRgt());
+                paramSource.addValue("depth", location.getDepth());
+                   
+                
+                
                 paramSource.addValue("locationno", location.getLocationno());
 		paramSource.addValue("locationid", location.getLocationid());
                 paramSource.addValue("parentname", location.getParentname());
@@ -200,6 +213,10 @@ public class LocationDaoImpl implements LocationDao {
         class LocationMapper implements RowMapper<Location> {
                 public Location mapRow(ResultSet rs, int rowNum) throws SQLException {
                   Location location = new Location();
+                        location.setLft(rs.getInt("lft"));
+                        location.setRgt(rs.getInt("lft"));
+                        location.setDepth(rs.getInt("depth"));
+                        
                   
                         location.setLocationno(rs.getInt("locationno"));
                         location.setLocationid(rs.getString("locationid"));

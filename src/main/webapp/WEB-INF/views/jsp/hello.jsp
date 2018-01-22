@@ -35,13 +35,6 @@
 	</sec:authorize>
                 
     <a href="<c:url value="/account/login" />">Login</a> | 
-    <a href="<c:url value="/users/list" />">User</a> |
-    <a href="<c:url value="/assets/assetlist" />">Asset</a>|
-    <a href="<c:url value="/locations/locationlist" />">Location</a>|
-    <a href="<c:url value="/integration//restapi3" />">Location-REST</a>|
-    <a href="<c:url value="/builds/asset" />">Asset Build</a>
-
-<!--    <a href="<c:url value="/account/login" />">Login</a> | 
     <a href="<c:url value="/users/add" />">Register</a> | 
     <a href="<c:url value="/users/list" />">User</a> |
     <a href="<c:url value="/admin/list" />">Admin</a>|
@@ -57,8 +50,7 @@
     <a href="<c:url value="/db/createdb" />">CreateDB</a>|
     <a href="<c:url value="/books/detail" />">Check View</a>|
     <a href="<c:url value="/integration/display/restapi" />">REST-API</a>|
-    <a href="<c:url value="/ajaxcalls/display" />">AJAX CALLS</a>-->
-    
+    <a href="<c:url value="/ajaxcalls/display" />">AJAX CALLS</a>
     
    
 <jsp:include page="../fragments/footergeneral.jsp" />

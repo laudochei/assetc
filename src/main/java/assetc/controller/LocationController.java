@@ -2,46 +2,32 @@ package assetc.controller;
 
 
 import assetc.model.Location;
-import assetc.model.Task;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.RequestMapping;
+import assetc.service.AssetService;
+import assetc.service.EmployeeService;
 import assetc.service.LocationService;
-import assetc.validator.LocationFormValidator;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.logging.Level;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestBody;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 
-@Controller
-@RequestMapping(value = "/locations")
+
+@RestController
+@RequestMapping(value = "/locationapi")
 public class LocationController {
-
-	private final Logger logger = LoggerFactory.getLogger(LocationController.class);
-
-	@Autowired
-	LocationFormValidator locationFormValidator;
-	
-        //Set a form validator
-	@InitBinder
-	protected void initBinder(WebDataBinder binder) {
-		binder.setValidator(locationFormValidator);
-	}
-
-	private LocationService locationService;
-        private int operationtype;
+            
+        private LocationService locationService;
+        
        
 
 	@Autowired
@@ -50,153 +36,62 @@ public class LocationController {
 	}
 
 	
-     // list page
-    @RequestMapping(value = "/locationlist", method=GET)
-    public String showAllLocation(Model model) {
-        model.addAttribute("locations", locationService.findAllLocation());
-        return "locationlist";
-    }
-  
-    
-     // show location
-	@RequestMapping(value = "/{locationno}", method = RequestMethod.GET)
-	public String showLocation(@PathVariable("locationno") Integer locationno, Model model) {
-
-		logger.debug("showLocation() locationno: {}", locationno);
-
+        // list page
+        @RequestMapping(value = "/locationlist", method=GET)
+        public  List<Location> showRestApi3(Model model) {
+           return locationService.findAllLocation();
+        }
+        
+        
+        
+        //display a single record
+        @RequestMapping(value = "/{locationno}", method = RequestMethod.GET)
+	public ResponseEntity<String> getLocation(@PathVariable("locationno") Integer locationno) {
 		Location location = locationService.findByLocationno(locationno);
 		if (location == null) {
-			model.addAttribute("css", "danger");
-			model.addAttribute("msg", "Location not found");
+			return new ResponseEntity("No location found for ID " + locationno, HttpStatus.NOT_FOUND);
 		}
-		model.addAttribute("location", location);
-
-		return "locationprofile";
-	}
-        
-        
-        
-        // show add location form
-	@RequestMapping(value = "/add", method = RequestMethod.GET)
-	public String showAddLocationForm(Model model) {
-                Task task = new Task(); 
-                int actionNo = 1; // set add action to 1
-                task.setCreate(actionNo);
-            
-		logger.debug("showAddLocationForm()");
-		Location location = new Location();
-                                
-                String date ="2016-05-01";
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                Date parsed = null;
-                try {
-                    parsed = format.parse(date);
-                } catch (ParseException ex) {
-                    java.util.logging.Logger.getLogger(LocationController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                java.sql.Date sql = new java.sql.Date(parsed.getTime());
-
-
-		// set default value
-                  location.setLocationid("ID80-003-BP-OLS-PEI-X-00");
-                  location.setParentname("ID80-ID80-TLSE");
-                  location.setDescription("PPNG, HZDOUS SOLID WASTE TREATMENT");
-                  location.setLongdescription("PPNG, HZDOUS SOLID WASTE TREATMENT");
-                  location.setParentcraft("IMP");
-                  location.setCraft("INSP");
-                  location.setEquipmenttype("type1");
-                  location.setFailurecode("FA_PEG");
-                  location.setSystemstatus("CRTE");
-                  location.setUserstatus("00");
-                  location.setCriticality("C");
-                  location.setCo(sql);
-                  location.setSud(sql);
-                  location.setPlanningplant("00000");
-                  location.setMaintenanceplant("ID80");
-                  location.setPhysicallocation("Aberdeen");
-                  location.setManufacturer("PHILIPS");
-                  location.setPartnum("00000");
-                  location.setModelnum("eLLK92036-36");
-                  location.setSerialnum("00000");
-                  location.setCustomfield("00000");
-                  
-		model.addAttribute("locationForm", location);	    
-                return "locationForm"; 
-	}
-     
-        
-        
-        
-    // add location
-        @RequestMapping(value="/add", method = RequestMethod.POST)
-        public String addLocation(@ModelAttribute("locationForm") @Validated Location location, BindingResult result, Model model,final RedirectAttributes redirectAttributes) {
-            
-                Task task = new Task(); 
-                int actionNo = 1; // set add action to 1
-                task.setCreate(actionNo);
-                locationService.checkAction(actionNo);
-                
-            logger.debug("addLocation() : {}", location);
-            //check for errors in the form
-              if (result.hasErrors()) 
-              {
-                return "locationForm";
-              } else { // save new location
-                  redirectAttributes.addFlashAttribute("css", "success");
-                  redirectAttributes.addFlashAttribute("msg", "Location added successfully!");
-                  locationService.saveLocation(location);
-                  return "redirect:/locations/" + location.getLocationno();
-                
-              }
+		return new ResponseEntity(location, HttpStatus.OK);
         }
-    
         
-        // show update form
-	@RequestMapping(value = "/{locationno}/update", method = RequestMethod.GET)
-	public String showUpdateLocationForm(@PathVariable("locationno") int locationno, Model model) {
-		logger.debug("showUpdateLocationForm() : {}", locationno);
-                Location location = locationService.findByLocationno(locationno);
-		model.addAttribute("locationForm", location);	    
-                return "locationForm";
-	}
+        //display a single record
+        @RequestMapping(value = "/children/{locationid}", method = RequestMethod.GET)
+	public List<Location> getAllLocationChild(@PathVariable("locationid") String locationid,Model model) {
+	
+                return locationService.findAllChild(locationid);
+        }
         
         
+        @RequestMapping(value = "/update/{locationno}", method = RequestMethod.PUT, headers = "Accept=application/json")
+        public ResponseEntity<Void> updateLocation(@PathVariable("locationno") Integer locationno, @RequestBody Location location) {
+         location.setLocationno(locationno);
+         locationService.updateLocation(location);
+         HttpHeaders headers = new HttpHeaders();
+         return new ResponseEntity<Void>(headers, HttpStatus.OK);
+        }
         
         
-    // update location
-    @RequestMapping(value = "/{locationno}/update", method = RequestMethod.POST)
-    public String updateLocation(@ModelAttribute("locationForm") @Validated Location location, BindingResult result, Model model,final RedirectAttributes redirectAttributes) {
-	operationtype = 1;
+        @RequestMapping(value = "/add", method = RequestMethod.POST, headers = "Accept=application/json")
+        public ResponseEntity<Void> addLocation(@RequestBody Location location) {         
+         locationService.saveLocation(location);
+         HttpHeaders headers = new HttpHeaders();
+         return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+        }
         
-         Task task = new Task(); 
-         int actionNo = 3; // set update action to 3
-         task.setUpdate(actionNo);
-         locationService.checkAction(actionNo);
-         
         
-        logger.debug("updateLocation() : {}", location);
-        if (result.hasErrors()) {
-            return "locationForm";
-        } else {
-            redirectAttributes.addFlashAttribute("css", "success");
-            redirectAttributes.addFlashAttribute("msg", "Location updated successfully!");
-            locationService.updateLocation(location);
-            return "redirect:/locations/" + location.getLocationno();
-        }  
-    }
-    
-    
-    
-    
-    // delete location
-    @RequestMapping(value = "/{locationno}/deletelocation", method = RequestMethod.GET)
-    public String deleteLocation(@PathVariable("locationno") Integer locationno, final RedirectAttributes redirectAttributes) {
-	logger.debug("deleteLocation() : {}", locationno);
-	locationService.deleteLocation(locationno);
-	redirectAttributes.addFlashAttribute("css", "success");
-	redirectAttributes.addFlashAttribute("msg", "Location is deleted!");
-        return "redirect:/locations/locationlist";
-    }   
-   
-
+        
+        @RequestMapping(value = "/delete/{locationno}", method = RequestMethod.GET)
+        public ResponseEntity<Location>  deleteLocation(@PathVariable("locationno") Integer locationno) {
+            System.out.println("Fetching & Deleting Location with no " + locationno);
+            
+            Location location = locationService.findByLocationno(locationno);
+            if (location == null) {
+		return new ResponseEntity("No location found for ID " + locationno, HttpStatus.NOT_FOUND);
+            }    
+            locationService.deleteLocation(locationno);
+            return new ResponseEntity<Location>(HttpStatus.NO_CONTENT);
+                
+        }   
+        
+ 
 }

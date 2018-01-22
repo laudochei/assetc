@@ -10,6 +10,37 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 public class Location {
   
+    
+    private Integer lft;
+    private Integer rgt;
+    private Integer depth;
+
+    public Integer getLft() {
+        return lft;
+    }
+
+    public void setLft(Integer lft) {
+        this.lft = lft;
+    }
+
+    public Integer getRgt() {
+        return rgt;
+    }
+
+    public void setRgt(Integer rgt) {
+        this.rgt = rgt;
+    }
+
+    public Integer getDepth() {
+        return depth;
+    }
+
+    public void setDepth(Integer depth) {
+        this.depth = depth;
+    }
+    
+    
+    
     private Integer locationno;
     private String locationid;
 
@@ -248,6 +279,7 @@ public class Location {
                                 + ", co=" + co + ", sud=" + sud + ", craft=" + craft + ", description=" + description + ", longdescription=" + longdescription + ", parentname=" + parentname
 				+ ", equipmenttype=" + equipmenttype + ", failurecode=" + failurecode + ", systemstatus=" + systemstatus + ", userstatus=" + userstatus + ", criticality=" + criticality + ", parentcraft=" + parentcraft
                                 + ", planningplant=" + planningplant + ", maintenanceplant=" + maintenanceplant + ", physicallocation=" + physicallocation + ", manufacturer=" + manufacturer + ", partnum=" + partnum + ", modelnum=" + modelnum + ", serialnum=" + serialnum 
+                                + ", lft=" + lft + ", rgt=" + rgt + ", depth=" + depth
                                 + ", customfield=" + customfield + "]" + isNew();
 	}
  
