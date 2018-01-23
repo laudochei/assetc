@@ -38,7 +38,7 @@
     <a href="<c:url value="/users/list" />">User</a> |
     <a href="<c:url value="/assets/assetlist" />">Asset</a>|
     <a href="<c:url value="/locations/locationlist" />">Location</a>|
-    <a href="<c:url value="/integration//restapi3" />">Location-REST</a>|
+    <a href="<c:url value="/integration/restapi3" />">Location-REST</a>|
     <a href="<c:url value="/builds/asset" />">Asset Build</a>
 
 <!--    <a href="<c:url value="/account/login" />">Login</a> | 
