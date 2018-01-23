@@ -18,12 +18,15 @@ public interface LocationDao {
         Location findByNo(Integer locationno);
         Location findById(String locationid);
 	List<Location> findAll();
-        List<Location> findAllChild(String locationid);
 	void saveLocation(Location location);
+        
 	void updateLocation(Location location);
+       
         int LocationExists(String locationid);
         void deleteLocation(Integer locationno);
         int validateLocation(Location location);
+        
+        //Location validateLocation(Location loc);
         
        void dragdrop(Location location, String locationid, String parentname);
        Location updateSingleLocation(Integer locationno, Location location);

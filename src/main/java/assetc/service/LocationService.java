@@ -13,7 +13,6 @@ public interface LocationService {
     List<Location> findAllLocation();
     Location findByLocationno(Integer locationno);
     Location findByLocationid(String locationid);
-    List<Location> findAllChild(String locationid);
     void deleteLocation(Integer locationno);
     void saveLocation(Location location);
     void updateLocation(Location location);

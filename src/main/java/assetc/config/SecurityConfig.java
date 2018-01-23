@@ -2,17 +2,13 @@ package assetc.config;
 
 import javax.sql.DataSource;
 
-//import com.allanditzel.springframework.security.web.csrf.CsrfTokenResponseHeaderBindingFilter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-//import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.csrf.CsrfFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -25,15 +21,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
 		
 		auth.jdbcAuthentication().dataSource(dataSource)
-                        .passwordEncoder(passwordEncoder())
 			.usersByUsernameQuery("select username,password, enabled from users where username=?")
 			.authoritiesByUsernameQuery("select username, role from user_roles where username=?");
 	}	
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-            //CsrfTokenResponseHeaderBindingFilter csrfTokenFilter = new CsrfTokenResponseHeaderBindingFilter();   
-            //http.addFilterAfter(csrfTokenFilter, CsrfFilter.class);  
+                CsrfTokenResponseHeaderBindingFilter csrfTokenFilter = new CsrfTokenResponseHeaderBindingFilter();   
+                http.addFilterAfter(csrfTokenFilter, CsrfFilter.class);  
                  
 		http.authorizeRequests()
 			.antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
@@ -46,18 +41,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.exceptionHandling().accessDeniedPage("/403")
 			.and()
 				.csrf()
-                                    .disable(); 	
+                      .disable();
+                                    
+             
+                                
+		
 	}
-        
-        
-        
-
-	@Bean
-	public PasswordEncoder passwordEncoder(){
-		PasswordEncoder encoder = new BCryptPasswordEncoder();
-		return encoder;
-	}
-        
-        
-        
 }

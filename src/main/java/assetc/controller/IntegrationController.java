@@ -6,11 +6,20 @@
 package assetc.controller;
 
 
+
+import assetc.model.Asset;
+import assetc.model.Employee;
 import assetc.model.Location;
+import assetc.model.Task;
 import assetc.service.AssetService;
 import assetc.service.EmployeeService;
 import assetc.service.LocationService;
+import java.net.URI;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,11 +31,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
 
 /**
  *
@@ -66,24 +70,15 @@ public class IntegrationController {
            return locationService.findAllLocation();
         }
         
-        
-        
-        //display a single record
+       
         @RequestMapping(value = "/restapi/{locationno}", method = RequestMethod.GET)
-	public ResponseEntity<String> getLocation(@PathVariable("locationno") Integer locationno) {
+	public ResponseEntity getLocation(@PathVariable("locationno") Integer locationno) {
 		Location location = locationService.findByLocationno(locationno);
 		if (location == null) {
 			return new ResponseEntity("No location found for ID " + locationno, HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity(location, HttpStatus.OK);
-        }
-        
-        //display a single record
-        @RequestMapping(value = "/restapi/children/{locationid}", method = RequestMethod.GET)
-	public List<Location> getAllLocationChild(@PathVariable("locationid") String locationid,Model model) {
-	
-                return locationService.findAllChild(locationid);
-        }
+	}
         
         
         @RequestMapping(value = "/restapi/update/{locationno}", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -103,8 +98,7 @@ public class IntegrationController {
         }
         
         
-        
-        @RequestMapping(value = "/restapi/delete/{locationno}", method = RequestMethod.GET)
+        @RequestMapping(value = "/restapi/{locationno}/deletelocation", method = RequestMethod.GET)
         public ResponseEntity<Location>  deleteLocation(@PathVariable("locationno") Integer locationno) {
             System.out.println("Fetching & Deleting Location with no " + locationno);
             
@@ -117,5 +111,4 @@ public class IntegrationController {
                 
         }   
         
- 
 }

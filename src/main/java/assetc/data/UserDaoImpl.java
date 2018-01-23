@@ -19,7 +19,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import assetc.model.User;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Repository
 public class UserDaoImpl implements UserDao {
@@ -30,13 +29,6 @@ public class UserDaoImpl implements UserDao {
 	public void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate) throws DataAccessException {
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 	}
-        
-        
-        public String GenPassword(String password){
-            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            String hashedPassword = passwordEncoder.encode(password);
-            return hashedPassword;
-        }
 
 	@Override
 	public User findById(Integer userid) {
@@ -52,24 +44,29 @@ public class UserDaoImpl implements UserDao {
 		} catch (EmptyResultDataAccessException e) {
 			// do nothing, return null
 		}
+
+
 		return result;
+
 	}
 
 	@Override
 	public List<User> findAll() {
-                
+
+		//String sql = "SELECT * FROM users";
                 String sql = "SELECT * FROM users";
+                //String sql = "SELECT * FROM ticks";
 		List<User> result = namedParameterJdbcTemplate.query(sql, new UserMapper());
+
 		return result;
+
 	}
 
 	@Override
 	public void save(User user) {
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();
-		String hashPassword = GenPassword(user.getPassword()); 
-                user.setPassword(hashPassword);
-                        
+		
 		String sql = "INSERT INTO USERS(USERNAME, PASSWORD, FIRSTNAME, LASTNAME, EMAIL, ADDRESS, PHONE, ENABLED) "
 				+ "VALUES ( :username, :password, :firstname, :lastname, :email, :address, :phone, :enabled)";
 
@@ -98,7 +95,7 @@ public class UserDaoImpl implements UserDao {
         @Override
         public User validateUser(Login login) {
             String sql = "select * from users where username='" + login.getUsername() + "' and password='" + login.getPassword() + "'" ;
-            //String sql = "select * from ticks where username='" + login.getUsername() + "' and password='" + login.getPassword() + "'" ;
+            
             
             List<User> users = namedParameterJdbcTemplate.query(sql, new UserMapper());
             return users.size() > 0 ? users.get(0) : null;  
@@ -155,10 +152,6 @@ public class UserDaoImpl implements UserDao {
         
 		}
 	}
-        
-        
-        
-        
 
 	
 }
