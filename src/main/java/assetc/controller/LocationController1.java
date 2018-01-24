@@ -206,6 +206,40 @@ public class LocationController1 {
       
             
         
+    @RequestMapping(value = "/childrennode/{locationid}", method = RequestMethod.GET)
+	public ModelAndView childrennode(@PathVariable("locationid") String locationid) {
+            
+                //final String uri = "http://localhost:25175/AssetC/userapi/userlist";
+                //final String uri = "http://localhost:25175/AssetC/integration/restapi3";
+                //final String uri = "http://localhost:25175/AssetC/builds/asset/api/locations";
+                //final String uri = "http://localhost:25175/AssetC/integration/restapi/children/ID80";
+                //final String uri = "http://localhost:25175/AssetC/integration/restapi/children/TANGGUH";
+                final String uri = "https://assetc.herokuapp.com/locationapi/children/" + locationid;
+                
+                RestTemplate restTemplate = new RestTemplate();
+                String result = restTemplate.getForObject(uri, String.class);
+                
+                ObjectMapper mapper = new ObjectMapper();
+                Object json = "";
+                Object node = "";
+            try {
+                node = mapper.readTree(result);
+            } catch (IOException ex) {
+                java.util.logging.Logger.getLogger(LocationController1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+		ModelAndView model = new ModelAndView();
+            try {
+                model.addObject("output", mapper.writerWithDefaultPrettyPrinter().writeValueAsString(node));
+            } catch (JsonProcessingException ex) {
+                java.util.logging.Logger.getLogger(LocationController1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+		
+		model.setViewName("restapi/jsontree");
+		return model;
+
+	}
+        
+        
         @RequestMapping(value = "/login", method = RequestMethod.GET)
 	public ModelAndView login() {
             
@@ -215,6 +249,41 @@ public class LocationController1 {
                 //final String uri = "http://localhost:25175/AssetC/integration/restapi/children/ID80";
                 //final String uri = "http://localhost:25175/AssetC/integration/restapi/children/TANGGUH";
                 final String uri = "https://assetc.herokuapp.com/locationapi/children/TANGGUH";
+                
+                RestTemplate restTemplate = new RestTemplate();
+                String result = restTemplate.getForObject(uri, String.class);
+                
+                ObjectMapper mapper = new ObjectMapper();
+                Object json = "";
+                Object node = "";
+            try {
+                node = mapper.readTree(result);
+            } catch (IOException ex) {
+                java.util.logging.Logger.getLogger(LocationController1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+		ModelAndView model = new ModelAndView();
+            try {
+                model.addObject("output", mapper.writerWithDefaultPrettyPrinter().writeValueAsString(node));
+            } catch (JsonProcessingException ex) {
+                java.util.logging.Logger.getLogger(LocationController1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+		
+		model.setViewName("restapi/jsontree");
+		return model;
+
+	}
+        
+        
+        @RequestMapping(value = "/rootnode", method = RequestMethod.GET)
+	public ModelAndView rootnode() {
+            
+                //final String uri = "http://localhost:25175/AssetC/userapi/userlist";
+                //final String uri = "http://localhost:25175/AssetC/integration/restapi3";
+                //final String uri = "http://localhost:25175/AssetC/builds/asset/api/locations";
+                //final String uri = "http://localhost:25175/AssetC/integration/restapi/children/ID80";
+                //final String uri = "http://localhost:25175/AssetC/integration/restapi/children/TANGGUH";
+                final String uri = "http://localhost:25175/AssetC/locationapi/rootnode";
+                //final String uri = "https://assetc.herokuapp.com/locationapi/children/TANGGUH";
                 
                 RestTemplate restTemplate = new RestTemplate();
                 String result = restTemplate.getForObject(uri, String.class);

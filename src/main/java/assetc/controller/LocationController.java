@@ -54,6 +54,28 @@ public class LocationController {
 		return new ResponseEntity(location, HttpStatus.OK);
         }
         
+        //display the record for the parent node 
+//        @RequestMapping(value = "/rootnode", method = RequestMethod.GET)
+//	public ResponseEntity<String> getParentNode(@PathVariable("locationid") String locationid) {
+//            System.out.println("JSON Tree ");
+//                Location location = locationService.findParentNode(locationid);
+//		if (location == null) {
+//			return new ResponseEntity("No location found for ID " + locationid, HttpStatus.NOT_FOUND);
+//		}
+//		return new ResponseEntity(location, HttpStatus.OK);
+//        }
+        
+        
+        @RequestMapping(value = "/rootnode", method = RequestMethod.GET)
+        public ResponseEntity<String> getRootNode() {
+            Location location = locationService.findParentNode();
+            if (location == null) {
+                return new ResponseEntity("No location found for root node", HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity(location, HttpStatus.OK);
+        }
+        
+        
         //display a single record
         @RequestMapping(value = "/children/{locationid}", method = RequestMethod.GET)
 	public List<Location> getAllLocationChild(@PathVariable("locationid") String locationid,Model model) {
