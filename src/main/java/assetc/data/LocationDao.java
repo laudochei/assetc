@@ -17,8 +17,11 @@ public interface LocationDao {
     
         Location findByNo(Integer locationno);
         Location findById(String locationid);
+        //Location findParentNode(String locationid);
+        Location findParentNode();
 	List<Location> findAll();
         List<Location> findAllChild(String locationid);
+        List<Location> findChildrenofNode(String locationid);
 	void saveLocation(Location location);
 	void updateLocation(Location location);
         int LocationExists(String locationid);

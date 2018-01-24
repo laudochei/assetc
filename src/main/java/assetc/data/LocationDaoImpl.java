@@ -63,6 +63,29 @@ public class LocationDaoImpl implements LocationDao {
 	}
         
         
+        // find the parent node
+        @Override
+	public Location findParentNode() {
+
+		Map<String, Object> params = new HashMap<String, Object>();
+                String parentname = "0";
+		params.put("parentname", parentname);
+                String sql = "select * from location where parentname='" + parentname + "'" ;
+                //String sql = "select * from location";
+		//String sql = "SELECT * FROM location WHERE parentname=:parentname";  
+                //String managerId = locationid == null ? "0" : locationid;
+                //String sql = "SELECT e.locationid, e.description, e.longdescription, e.parentname As parentname, (SELECT COUNT(*) FROM location WHERE parentname = e.locationid) AS DirectReports FROM location e WHERE e.parentname = '0'"; 
+            
+		Location result = null;
+		try {
+			result = namedParameterJdbcTemplate.queryForObject(sql, params, new LocationMapper());
+		} catch (EmptyResultDataAccessException e) {
+			// do nothing, return null
+		}
+                return result;
+           
+	}
+        
         
         // this function returns all the children of a particular node
         @Override
@@ -72,6 +95,32 @@ public class LocationDaoImpl implements LocationDao {
             return result;
         }
         
+        
+        
+        // this function returns hierarchical data
+        @Override
+	public List<Location> findChildrenofNode(String locationid) {
+            Map<String, Object> params = new HashMap<String, Object>();
+            String managerId = locationid == null ? "0" : locationid;
+            String sql = "SELECT e.locationid, e.description, e.longdescription, e.parentname As parentname, (SELECT COUNT(*) FROM location WHERE parentname = e.locationid) AS DirectReports FROM location e "; 
+            
+            if (managerId=="0") {
+                // select where employees reportsto is null
+                sql += "WHERE e.parentname = '0'";
+                //stmt = _conn.prepareStatement(query);
+            }else{
+                // select where the reportsto is equal to the employeeId parameter
+                sql += "WHERE e.parentname = ?" ;
+                //stmt = _conn.prepareStatement(query);
+                //stmt.setString(1, managerId);
+                params.put("locationid", managerId);
+            }
+                        
+           
+            //String sql = "select * from location where parentname='" + locationid + "'" ;
+            List<Location> result = namedParameterJdbcTemplate.query(sql, new LocationMapper());
+            return result;
+        }
         
         
         
