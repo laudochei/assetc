@@ -168,10 +168,8 @@ public class IntegrationRestPagesController {
                 //final String uri = "http://localhost:25175/AssetC/builds/asset/api/locations";
                 //final String uri = "http://localhost:25175/AssetC/integration/restapi/children/ID80";
                 //final String uri = "http://localhost:25175/AssetC/integration/restapi/children/TANGGUH";
-
-final String uri = "https://assetc.herokuapp.com/locationapi/children/TANGGUH";
-
-
+                final String uri = "https://assetc.herokuapp.com/locationapi/children/TANGGUH";
+                
                 RestTemplate restTemplate = new RestTemplate();
                 String result = restTemplate.getForObject(uri, String.class);
                 
