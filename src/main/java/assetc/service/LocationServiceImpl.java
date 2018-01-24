@@ -53,6 +53,11 @@ public class LocationServiceImpl implements LocationService {
             return locationDao.findAllChild(locationid);
         }
         
+        @Override
+        public Location findParentNode() {    
+            return locationDao.findParentNode();
+        }
+        
         
         @Override
         public int checkAction(Integer actionno) {

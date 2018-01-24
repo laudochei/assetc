@@ -24,4 +24,6 @@ public interface LocationService {
     int checkAction(Integer actionno);
     void dragdrop(Location location, String locationid, String parentname);
     
+    Location findParentNode();
+    
 }
