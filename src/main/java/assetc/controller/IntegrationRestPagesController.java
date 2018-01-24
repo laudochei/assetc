@@ -11,13 +11,21 @@ package assetc.controller;
 import assetc.service.AssetService;
 import assetc.service.EmployeeService;
 import assetc.service.LocationService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -120,6 +128,98 @@ public class IntegrationRestPagesController {
         }
         
         
+        /*
+        @RequestMapping(value = "/treeview", method = RequestMethod.GET)
+        public ModelAndView treeView() throws IOException {
+              String test = "http://localhost:25175/AssetC/userapi/userlist";
+              ObjectMapper mapper = new ObjectMapper();
+              Object json = mapper.readValue(test, Object.class);
+              ModelAndView modelandView = new ModelAndView("viewname");
+              modelandView.addObject("restapi/jsontree", mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
+              return modelandView;
+        }
+        */
         
+        
+        @RequestMapping(value = "/treeview", method = RequestMethod.GET)
+        public ModelAndView treeView() throws IOException {
+              String test = "http://localhost:25175/AssetC/userapi/userlist";
+              ObjectMapper mapper = new ObjectMapper();
+              Object json = mapper.readValue(test, Object.class);
+              ModelAndView modelandView = new ModelAndView();
+              modelandView.addObject("output", mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
+              modelandView.setViewName("restapi/displayapi");
+              return modelandView;
+              
+              
+//            ModelAndView model = new ModelAndView();
+//            model.addObject("title", "Spring Security Login Form - Database Authentication");
+//            model.addObject("message", "This is default page!");
+//            model.setViewName("hello");
+//            return model;
+            
+        }
+        
+        @RequestMapping(value = "/login", method = RequestMethod.GET)
+	public ModelAndView login() {
+            
+                //final String uri = "http://localhost:25175/AssetC/userapi/userlist";
+                //final String uri = "http://localhost:25175/AssetC/integration/restapi3";
+                //final String uri = "http://localhost:25175/AssetC/builds/asset/api/locations";
+                //final String uri = "http://localhost:25175/AssetC/integration/restapi/children/ID80";
+                //final String uri = "http://localhost:25175/AssetC/integration/restapi/children/TANGGUH";
+
+final String uri = "https://assetc.herokuapp.com/locationapi/children/TANGGUH";
+
+
+                RestTemplate restTemplate = new RestTemplate();
+                String result = restTemplate.getForObject(uri, String.class);
+                
+                ObjectMapper mapper = new ObjectMapper();
+                Object json = "";
+                Object node = "";
+            try {
+                //JsonNode node = mapper.readTree(genreJson);
+                node = mapper.readTree(result);
+                //json = mapper.readValue(result, Object.class);
+            } catch (IOException ex) {
+                Logger.getLogger(IntegrationRestPagesController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+		ModelAndView model = new ModelAndView();
+            try {
+                model.addObject("output", mapper.writerWithDefaultPrettyPrinter().writeValueAsString(node));
+            } catch (JsonProcessingException ex) {
+                Logger.getLogger(IntegrationRestPagesController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+		
+		model.setViewName("restapi/jsontree");
+                getEmployees();
+		return model;
+
+	}
+        
+        private static void getEmployees()
+        {
+            try {
+                final String uri = "http://localhost:25175/AssetC/userapi/userlist";
+                RestTemplate restTemplate = new RestTemplate();
+                String result = restTemplate.getForObject(uri, String.class);
+                
+                // create an ObjectMapper instance.
+                ObjectMapper mapper = new ObjectMapper();
+                // use the ObjectMapper to read the json string and create a tree
+                JsonNode node = mapper.readTree(result);
+                
+                
+                String resultOriginal = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(node);
+                System.out.println("JSON Tree " + resultOriginal);
+                //System.out.println(result);
+            } catch (IOException ex) {
+                Logger.getLogger(IntegrationRestPagesController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            
+            
+        }
     
 }
