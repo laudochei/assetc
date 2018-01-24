@@ -47,6 +47,13 @@ public class LocationServiceImpl implements LocationService {
             return locationDao.findById(locationid);
         }
         
+        
+        @Override
+        public List<Location> findAllChild(String locationid) {    
+            return locationDao.findAllChild(locationid);
+        }
+        
+        
         @Override
         public int checkAction(Integer actionno) {
             Task task = new Task(); 
