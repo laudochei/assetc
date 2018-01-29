@@ -2,8 +2,6 @@ package assetc.controller;
 
 
 import assetc.model.Location;
-import assetc.service.AssetService;
-import assetc.service.EmployeeService;
 import assetc.service.LocationService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +15,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -82,6 +78,14 @@ public class LocationController {
 	
                 return locationService.findAllChild(locationid);
         }
+        
+        //display a single record
+        @RequestMapping(value = "/allnodes", method = RequestMethod.GET)
+	public List<Location> getChildrenofNode(@RequestParam(value="locationid", defaultValue="20") String locationid) {
+            return locationService.findChildrenofNode(locationid);
+        }
+        
+        
         
         
         @RequestMapping(value = "/update/{locationno}", method = RequestMethod.PUT, headers = "Accept=application/json")
