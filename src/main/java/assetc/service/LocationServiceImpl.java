@@ -60,6 +60,12 @@ public class LocationServiceImpl implements LocationService {
         
         
         @Override
+        public List<Location> findChildrenofNode(String locationid) {    
+            return locationDao.findChildrenofNode(locationid);
+        }
+        
+        
+        @Override
         public int checkAction(Integer actionno) {
             Task task = new Task(); 
                  

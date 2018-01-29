@@ -25,5 +25,6 @@ public interface LocationService {
     void dragdrop(Location location, String locationid, String parentname);
     
     Location findParentNode();
+    List<Location> findChildrenofNode(String locationid);
     
 }
