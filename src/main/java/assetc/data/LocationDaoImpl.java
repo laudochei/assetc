@@ -19,6 +19,12 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import assetc.model.Location;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.sql.DataSource;
 
 @Repository
 public class LocationDaoImpl implements LocationDao {
@@ -29,6 +35,14 @@ public class LocationDaoImpl implements LocationDao {
 	public void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate) throws DataAccessException {
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 	}
+        
+        
+        DataSource dataSource;
+        @Autowired
+	public void setDataSource(DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+        
 
 	@Override
 	public Location findByNo(Integer locationno) {
@@ -101,20 +115,40 @@ public class LocationDaoImpl implements LocationDao {
         @Override
 	public List<Location> findChildrenofNode(String locationid) {
             Map<String, Object> params = new HashMap<String, Object>();
-            String managerId = locationid == null ? "0" : locationid;
-            String sql = "SELECT e.locationid, e.description, e.longdescription, e.parentname As parentname, (SELECT COUNT(*) FROM location WHERE parentname = e.locationid) AS DirectReports FROM location e "; 
-            
-            if (managerId=="0") {
-                // select where employees reportsto is null
-                sql += "WHERE e.parentname = '0'";
-                //stmt = _conn.prepareStatement(query);
-            }else{
-                // select where the reportsto is equal to the employeeId parameter
-                sql += "WHERE e.parentname = ?" ;
-                //stmt = _conn.prepareStatement(query);
-                //stmt.setString(1, managerId);
-                params.put("locationid", managerId);
+            System.out.println("Check this: " + locationid);
+            String managerId = "";
+            if (locationid.equals("20")){
+                managerId = "0";
             }
+            else{
+                managerId = locationid;
+            }
+                
+            //String managerId = locationid == "20" ? "0" : locationid;
+            System.out.println("managerid: " + managerId);
+            String sql = ""; //"SELECT e.locationid, e.description, e.longdescription, e.parentname As parentname, (SELECT COUNT(*) FROM location WHERE parentname = e.locationid) AS DirectReports FROM location e "; 
+            
+//            if (managerId=="0") {
+//                // select where employees reportsto is null
+//                sql += "WHERE e.parentname = '0'";
+//                //stmt = _conn.prepareStatement(query);
+//            }else{
+//                // select where the reportsto is equal to the employeeId parameter
+//                sql += "WHERE e.parentname = ?" ;
+//                //stmt = _conn.prepareStatement(query);
+//                //stmt.setString(1, managerId);
+//                //params.put("locationid", managerId);
+//            }
+
+
+            if (managerId=="0") {
+                //sql += "WHERE e.parentname = '0'";
+                sql = "SELECT * from location where parentname = '0'"; //e.locationid, e.description, e.longdescription, e.parentname As parentname, (SELECT COUNT(*) FROM assetc.location WHERE parentname = e.locationid) AS DirectReports FROM assetc.location e WHERE e.parentname = '0'";
+            }else{
+                sql = "SELECT * from location where parentname = '" + managerId + "'" ;
+            }
+            
+            
                         
            
             //String sql = "select * from location where parentname='" + locationid + "'" ;
@@ -127,10 +161,74 @@ public class LocationDaoImpl implements LocationDao {
 	@Override
 	public List<Location> findAll() {
                 //String sql = "SELECT CONCAT( REPEAT(' ', COUNT(parent.locationid) - 1), node.locationid) AS name FROM location AS node, location AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt GROUP BY node.locationid ORDER BY node.lft";
-                
-		String sql = "select * from location order by locationno";
+                //String sql = "select * FROM location order by locationno";
+		String sql = "select e.*, (SELECT COUNT(*) FROM location WHERE parentname = e.locationid) AS DirectReports from location As e";
 		List<Location> result = namedParameterJdbcTemplate.query(sql, new LocationMapper());
+                
 		return result;
+                
+                
+                
+                                
+                /*
+                String query = "SELECT e.locationno, e.locationid, e.parentname, e.description, e.longdescription, e.parentcraft, e.craft, e.equipmenttype, e.failurecode, e.systemstatus, e.userstatus, e.criticality, e.co, e.sud, e.planningplant, e.maintenanceplant, e.physicallocation, e.manufacturer, e.partnum, e.modelnum, e.serialnum, e.customfield, (SELECT COUNT(*) FROM location WHERE parentname = e.locationid) AS DirectReports FROM location e";                      
+                                 
+                
+                //String jsonstring = null;
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+                List<Location> locations = new ArrayList<Location>();
+		try{
+                        //con = DriverManager.getConnection(jdbcUrl, username, password);
+                        con = dataSource.getConnection();
+			ps = con.prepareStatement(query);
+                        rs = ps.executeQuery();
+			while(rs.next()){
+                                //System.out.println(rs.getString(1));
+                                //jsonstring = rs.getString(1);
+                                Location location = new Location();
+				
+				// select fields out of the database and set them on the class
+                                location.setLocationno(rs.getInt("locationno"));
+				location.setLocationid(rs.getString("locationid"));
+				location.setDescription(rs.getString("description"));
+				location.setLongdescription(rs.getString("longdescription"));
+				location.setParentname(rs.getString("parentname"));
+                                location.setParentcraft(rs.getString("parentcraft"));
+                                location.setCraft(rs.getString("craft"));
+                                location.setEquipmenttype(rs.getString("equipmenttype"));
+                                location.setFailurecode(rs.getString("failurecode"));
+                                location.setSystemstatus(rs.getString("systemstatus"));
+                                location.setUserstatus(rs.getString("userstatus"));
+                                location.setCriticality(rs.getString("criticality"));
+                                location.setPlanningplant(rs.getString("planningplant"));
+                                location.setMaintenanceplant(rs.getString("maintenanceplant"));
+                                location.setPhysicallocation(rs.getString("physicallocation"));
+                                location.setManufacturer(rs.getString("manufacturer"));
+                                location.setPartnum(rs.getString("partnum"));
+                                location.setModelnum(rs.getString("modelnum"));
+                                location.setSerialnum(rs.getString("serialnum"));
+                                location.setCustomfield(rs.getString("customfield"));
+                                location.setHasChildren(rs.getInt("DirectReports") > 0); 
+				//location.setFullDescription();
+				
+				// add the class to the list
+				locations.add(location);
+			}	
+		}catch(SQLException e){
+			e.printStackTrace();
+		}finally{
+			try {
+				rs.close();
+				ps.close();
+				con.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return locations; //genres;
+                */
 
 	}
 
@@ -176,6 +274,7 @@ public class LocationDaoImpl implements LocationDao {
             namedParameterJdbcTemplate.update(sql, getSqlParameterByModel(location));
             
 	}
+        
         @Override
 	public Location updateSingleLocation(Integer locationno, Location location) {
             
@@ -289,6 +388,7 @@ public class LocationDaoImpl implements LocationDao {
                         location.setModelnum(rs.getString("modelnum"));
                         location.setSerialnum(rs.getString("serialnum"));
                         location.setCustomfield(rs.getString("customfield"));
+                        location.setHasChildren(rs.getInt("DirectReports") > 0); 
 
 
                   return location;
