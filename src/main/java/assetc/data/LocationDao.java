@@ -17,7 +17,7 @@ public interface LocationDao {
     
         Location findByNo(Integer locationno);
         Location findById(String locationid);
-        //Location findParentNode(String locationid);
+        boolean locationexists(Location location);
         Location findParentNode();
 	List<Location> findAll();
         List<Location> findAllChild(String locationid);
@@ -26,10 +26,11 @@ public interface LocationDao {
 	void updateLocation(Location location);
         int LocationExists(String locationid);
         void deleteLocation(Integer locationno);
+        int deleteException(String locationid);
         int validateLocation(Location location);
-        
-       void dragdrop(Location location, String locationid, String parentname);
-       Location updateSingleLocation(Integer locationno, Location location);
+        void dragdrop(Location location, String locationid, String parentname);
+        Location updateSingleLocation(Integer locationno, Location location);
+        String findJsonTree(String locationid);
         
         
     

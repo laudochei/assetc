@@ -20,6 +20,7 @@ import org.springframework.stereotype.Repository;
 
 import assetc.model.Location;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -73,6 +74,8 @@ public class LocationDaoImpl implements LocationDao {
 		} catch (EmptyResultDataAccessException e) {
 			// do nothing, return null
 		}
+                
+                System.out.println("check locationid :" +  locationid);
                 return result;
            
 	}
@@ -209,6 +212,18 @@ public class LocationDaoImpl implements LocationDao {
 		namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource("locationno", locationno));
 	}
         
+               
+        
+        
+        @Override
+        public int deleteException(String locationid) {
+            
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("locationid", locationid);
+            String sql = "SELECT count(*) FROM asset WHERE locationid = :locationid";
+            int count = namedParameterJdbcTemplate.queryForObject(sql, params, Integer.class);
+            return count;
+        }
 	
         @Override
         public int LocationExists(String locationid) {
@@ -276,14 +291,55 @@ public class LocationDaoImpl implements LocationDao {
         }
         
         
-        /*
         @Override
-        public Location validateLocation(Location loc) {
-            String sql = "select * from location where locationno='" + loc.getLocationno() + "' and locationid='" + loc.getLocationid() + "'" ;
-            List<Location> location = namedParameterJdbcTemplate.query(sql, new LocationMapper());
-            return location.size() > 0 ? location.get(0) : null;  
+        public boolean locationexists(Location location) {
+           return findById(location.getLocationid()) != null;
         }
-        */
+        
+        
+        //retreive json hierarchy 
+        @Override
+	public String findJsonTree(String locationid) {
+    
+                try {
+                    Class.forName("org.postgresql.Driver");
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(LocationDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                String jdbcUrl = "jdbc:postgresql://localhost:5432/jsondb";
+                String username = "postgres";
+                String password = "welcome123";
+                //String query = "WITH data AS( " + "select array_to_json(array_agg(row_to_json(t))) as data " + "    from ( " + "     SELECT id, name, COALESCE(get_children(id), '[]') as children from genres " + "    ) t " + ") SELECT get_tree(data) from data;";
+                String query = "WITH data AS( " + "select array_to_json(array_agg(row_to_json(t))) as data " + "    from ( " + "     SELECT locationid, description, COALESCE(get_childrenlocation(locationid), '[]') as children from location " + "    ) t " + ") SELECT get_treelocation(data) from data;";
+                String jsonstring = null;
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try{
+                        con = DriverManager.getConnection(jdbcUrl, username, password);
+			ps = con.prepareStatement(query);
+                        rs = ps.executeQuery();
+			while(rs.next()){
+                                System.out.println(rs.getString(1));
+                                jsonstring = rs.getString(1);
+			}	
+		}catch(SQLException e){
+			e.printStackTrace();
+		}finally{
+			try {
+				rs.close();
+				ps.close();
+				con.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return jsonstring; //genres;
+
+
+                
+	}
         
         
 
