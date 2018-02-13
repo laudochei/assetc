@@ -64,6 +64,11 @@ public class LocationServiceImpl implements LocationService {
             return locationDao.findChildrenofNode(locationid);
         }
         
+        @Override
+        public String findJsonTree(String locationid) {    
+            return locationDao.findJsonTree(locationid);
+        }
+        
         
         @Override
         public int checkAction(Integer actionno) {
@@ -108,6 +113,12 @@ public class LocationServiceImpl implements LocationService {
             return locationDao.LocationExists(locationid);
         }
         
+        @Override
+        public int deleteException(String locationid){
+            return locationDao.deleteException(locationid);
+        }
+        
+        
         /*
         @Override
         public Location validateLocation(Location location) {
@@ -122,6 +133,11 @@ public class LocationServiceImpl implements LocationService {
             return locationDao.validateLocation(location);
         }
         
+        
+        @Override
+        public boolean exists(Location location) {
+            return findByLocationid(location.getLocationid()) != null;
+        }
         
         @Override
         public int operationType(int opno) {

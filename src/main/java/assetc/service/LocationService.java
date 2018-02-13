@@ -19,12 +19,15 @@ public interface LocationService {
     void updateLocation(Location location);
     int LocationExists(String locationid);
     int operationType(int operationno);
-    //Location validateLocation(Location loc);
+    boolean exists(Location location);
     int validateLocation(Location location);
     int checkAction(Integer actionno);
     void dragdrop(Location location, String locationid, String parentname);
-    
     Location findParentNode();
     List<Location> findChildrenofNode(String locationid);
+    String findJsonTree(String locationid);
+    int deleteException(String locationid);
+    
+    
     
 }
