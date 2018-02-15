@@ -122,9 +122,11 @@ public class LocationController {
             
             int locationidstatus = locationService.deleteException(location.getLocationid());     
             if (locationidstatus > 0) { 
-                //throw new LocationException("Record cannot be deleted " + locationno);
-                return new ResponseEntity("Record: " + locationno + " cannot be deleted", HttpStatus.NOT_FOUND);
+                throw new LocationException("Record cannot be deleted " + locationno);
+                //return new ResponseEntity("Record: " + locationno + " cannot be deleted", HttpStatus.NOT_FOUND);
             }
+            
+            
                     
                     
             locationService.deleteLocation(locationno);
