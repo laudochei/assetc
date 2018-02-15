@@ -114,7 +114,7 @@ public class LocationController {
             Location location = locationService.findByLocationno(locationno);
             if (location == null) {
                 
-                throw new LocationException("No location found for NO " + locationno);
+                throw new LocationException("No record found for locationno: " + locationno);
                 //throw new SQLException("Record cannot be delete or update " + locationno);
 		//return new ResponseEntity("No location found for ID " + locationno, HttpStatus.NOT_FOUND);
                 
@@ -122,7 +122,7 @@ public class LocationController {
             
             int locationidstatus = locationService.deleteException(location.getLocationid());     
             if (locationidstatus > 0) { 
-                throw new LocationException("Record cannot be deleted " + locationno);
+                throw new LocationException("Record cannot be deleted: " + locationno);
                 //return new ResponseEntity("Record: " + locationno + " cannot be deleted", HttpStatus.NOT_FOUND);
             }
             
@@ -156,13 +156,15 @@ public class LocationController {
                 //return new ResponseEntity<Void>(HttpStatus.CONFLICT);
                 //return new ResponseEntity<Void>(HttpStatus.CONFLICT);
                 //return new ResponseEntity("Record: " + location.getLocationno() + " cannot be deleted", HttpStatus.NOT_FOUND);
-                throw new LocationException(" location record " + location.getLocationid() + " already exist");
+                throw new LocationException(" Location record " + location.getLocationid() + " already exist");
             }
 
             locationService.saveLocation(location);
             HttpHeaders headers = new HttpHeaders();
             URI locationUri = ucb.path("/locationapi/").path(String.valueOf(location.getLocationno())).build().toUri();
             headers.setLocation(locationUri);
+            headers.add("Locationno", String.valueOf(location.getLocationno()));
+
             ResponseEntity<Void> responseEntity = new ResponseEntity<Void> (headers, HttpStatus.CREATED);
             return responseEntity;
         }
