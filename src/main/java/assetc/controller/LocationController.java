@@ -81,16 +81,17 @@ public class LocationController {
         
         
         //display all children of a particular node when given a locationid
-        @RequestMapping(value = "/children/{locationid}", method = RequestMethod.GET)
-	public List<Location> getAllLocationChild(@PathVariable("locationid") String locationid,Model model) {
-	
-                return locationService.findAllChild(locationid);
+        @RequestMapping(value = "/children/{locationno}", method = RequestMethod.GET)
+	public List<Location> getAllLocationChild(@PathVariable("locationno") Integer locationno,Model model) {
+                Location location = locationService.findByLocationno(locationno);
+                return locationService.findAllChild(location.getLocationid());
         }
         
         //display a single record
         @RequestMapping(value = "/allnodes", method = RequestMethod.GET)
-        public List<Location> getChildrenofNode(@RequestParam(value="locationid", defaultValue="20") String locationid) {
-            return locationService.findChildrenofNode(locationid);
+        public List<Location> getChildrenofNode(@RequestParam(value="locationno", defaultValue="20") Integer locationno) {
+             Location location = locationService.findByLocationno(locationno);
+            return locationService.findChildrenofNode(location.getLocationid());
         }
         
                 
