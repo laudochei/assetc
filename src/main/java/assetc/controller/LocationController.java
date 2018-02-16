@@ -113,11 +113,9 @@ public class LocationController {
             
             Location location = locationService.findByLocationno(locationno);
             if (location == null) {
-                
                 throw new LocationException("No record found for locationno: " + locationno);
                 //throw new SQLException("Record cannot be delete or update " + locationno);
-		//return new ResponseEntity("No location found for ID " + locationno, HttpStatus.NOT_FOUND);
-                
+		//return new ResponseEntity("No location found for ID " + locationno, HttpStatus.NOT_FOUND);  
             }    
             
             int locationidstatus = locationService.deleteException(location.getLocationid());     
@@ -127,8 +125,12 @@ public class LocationController {
             }
             
             
-                    
-                    
+            int rootnodestatus = locationService.checkrootnode(locationno);     
+            if (rootnodestatus > 0) { 
+                throw new LocationException("Root node cannot be delete");
+            }
+            
+                              
             locationService.deleteLocation(locationno);
             return new ResponseEntity<Location>(HttpStatus.NO_CONTENT);
                 
@@ -164,8 +166,21 @@ public class LocationController {
             URI locationUri = ucb.path("/locationapi/").path(String.valueOf(location.getLocationno())).build().toUri();
             headers.setLocation(locationUri);
             headers.add("Locationno", String.valueOf(location.getLocationno()));
-
             ResponseEntity<Void> responseEntity = new ResponseEntity<Void> (headers, HttpStatus.CREATED);
+            
+            
+            
+            //var response = Request.CreateResponse(HttpStatusCode.OK, createdItemId);
+            //response.Headers.Location = new Uri(Url.Link("SomeRoutes", new { id = createdItem }));
+
+//            var corsResult = new CorsResult();
+//            corsResult.AllowedExposedHeaders.Add("Location");
+//            response.WriteCorsHeaders(corsResult);
+//            
+            
+            
+            
+            //return new ResponseEntity(location.getLocationno(), HttpStatus.CREATED);
             return responseEntity;
         }
         
