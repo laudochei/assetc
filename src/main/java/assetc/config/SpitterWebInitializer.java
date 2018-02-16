@@ -1,5 +1,6 @@
 package assetc.config;
 
+import javax.servlet.Filter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 import assetc.config.WebConfig;
 
@@ -19,5 +20,11 @@ public class SpitterWebInitializer extends AbstractAnnotationConfigDispatcherSer
   protected String[] getServletMappings() {
     return new String[] { "/" };
   }
+  
+  @Override
+    protected Filter[] getServletFilters() {
+        Filter [] singleton = { new CORSFilter()};
+        return singleton;
+    }
 
 }
