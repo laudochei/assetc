@@ -224,6 +224,19 @@ public class LocationDaoImpl implements LocationDao {
             int count = namedParameterJdbcTemplate.queryForObject(sql, params, Integer.class);
             return count;
         }
+        
+        
+        @Override
+        public int checkrootnode(Integer locationno) {
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("locationno", locationno);
+            String sql = "SELECT count(*) FROM location WHERE locationno = :locationno and parentname = '0'";
+            int count = namedParameterJdbcTemplate.queryForObject(sql, params, Integer.class);
+            return count;   
+        }
+        
+        
+        
 	
         @Override
         public int LocationExists(String locationid) {
