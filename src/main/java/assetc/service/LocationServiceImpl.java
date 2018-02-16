@@ -118,6 +118,11 @@ public class LocationServiceImpl implements LocationService {
             return locationDao.deleteException(locationid);
         }
         
+        @Override
+        public int checkrootnode(Integer locationno){
+            return locationDao.checkrootnode(locationno);
+        }
+        
         
         /*
         @Override
