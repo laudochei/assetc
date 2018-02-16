@@ -31,6 +31,7 @@ public interface LocationDao {
         void dragdrop(Location location, String locationid, String parentname);
         Location updateSingleLocation(Integer locationno, Location location);
         String findJsonTree(String locationid);
+        int checkrootnode(Integer locationno);
         
         
     
