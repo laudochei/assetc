@@ -104,6 +104,67 @@ public class LocationController {
         }
         
         
+        @RequestMapping(value = "/assign", method = RequestMethod.PUT, headers = "Accept=application/json")
+        public ResponseEntity<Void>  reassign(@RequestParam("locationno_source") Integer locationno_source, @RequestParam(value="locationno_dest") Integer locationno_dest, @RequestBody Location location) {
+           
+            //locationno_source = 126;
+            //locationno_dest = 125;
+            
+            Location location_source = locationService.findByLocationno(locationno_source);
+            String locationid_source = location_source.getLocationid();
+            String parentname_source = location_source.getParentname();
+            
+            Location location_dest = locationService.findByLocationno(locationno_dest);
+            String locationid_dest = location_dest.getLocationid();
+            String parentname_dest = location_dest.getParentname();
+           
+            if (location_source == null) {
+                return new ResponseEntity("No location found for ID " + location_source, HttpStatus.NOT_FOUND);  
+            } 
+            if (location_dest == null) {
+                return new ResponseEntity("No location found for ID " + locationno_dest, HttpStatus.NOT_FOUND);  
+            } 
+            
+            location_source.setParentname(location_dest.getLocationid());
+            locationService.updateLocation(location_source);
+            
+            HttpHeaders headers = new HttpHeaders();
+            return new ResponseEntity<Void>(headers, HttpStatus.OK);
+            
+        }
+        
+        
+        //re-assign  a record
+        /*
+        @RequestMapping(value = "/assign", method = RequestMethod.PUT, headers = "Accept=application/json")
+        public ResponseEntity<String> reassign(@RequestParam("locationno_source") Integer locationno_source, @RequestParam(value="locationno_dest") Integer locationno_dest, @RequestBody Location location) {
+             
+            locationno_source = 126;
+            locationno_dest = 125;
+            
+            
+             Location location_source = locationService.findByLocationno(locationno_source);
+             String locationid_source = location_source.getLocationid();
+             String parentname_source = location_source.getParentname();
+             
+             System.out.println("locationid-source: " + locationno_source);
+             System.out.println("parentname-source: " + parentname_source);
+             
+             
+             Location location_dest = locationService.findByLocationno(locationno_dest);
+             String locationid_dest = location_dest.getLocationid();
+             String parentname_dest = location_dest.getParentname();
+             
+             int assign = locationService.reassign(locationid_source, parentname_source, locationid_dest, parentname_dest);;     
+             if (assign > 0) { 
+                //throw new LocationException("Record cannot be deleted: " + locationno);
+                return new ResponseEntity("Record updated: " + locationno_dest, HttpStatus.NOT_FOUND);
+             }
+             else {
+                 return new ResponseEntity("Record cannot be updated: " + locationno_source, HttpStatus.NOT_FOUND);
+             } 
+        }
+        */
         
         
         
