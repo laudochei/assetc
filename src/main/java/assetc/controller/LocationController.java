@@ -51,6 +51,7 @@ public class LocationController {
         //display a single record
         @RequestMapping(value = "/{locationno}", method = RequestMethod.GET)
 	public ResponseEntity<String> getLocation(@PathVariable("locationno") Integer locationno) {
+           
 		Location location = locationService.findByLocationno(locationno);
 		if (location == null) {
 			return new ResponseEntity("No location found for ID " + locationno, HttpStatus.NOT_FOUND);
@@ -58,18 +59,7 @@ public class LocationController {
 		return new ResponseEntity(location, HttpStatus.OK);
         }
         
-        //display the record for the parent node 
-//        @RequestMapping(value = "/rootnode", method = RequestMethod.GET)
-//	public ResponseEntity<String> getParentNode(@PathVariable("locationid") String locationid) {
-//            System.out.println("JSON Tree ");
-//                Location location = locationService.findParentNode(locationid);
-//		if (location == null) {
-//			return new ResponseEntity("No location found for ID " + locationid, HttpStatus.NOT_FOUND);
-//		}
-//		return new ResponseEntity(location, HttpStatus.OK);
-//        }
-        
-        
+         
         @RequestMapping(value = "/rootnode", method = RequestMethod.GET)
         public ResponseEntity<String> getRootNode() {
             Location location = locationService.findParentNode();
@@ -105,73 +95,32 @@ public class LocationController {
         
         
         @RequestMapping(value = "/assign", method = RequestMethod.PUT, headers = "Accept=application/json")
-        public ResponseEntity<Void>  reassign(@RequestParam("locationno_source") Integer locationno_source, @RequestParam(value="locationno_dest") Integer locationno_dest, @RequestBody Location location) {
-           
-            //locationno_source = 126;
-            //locationno_dest = 125;
-            
+        public ResponseEntity<Void>  reassign(@RequestParam("locationno_source") Integer locationno_source, @RequestParam(value="locationno_dest") Integer locationno_dest, @RequestBody Location location) throws LocationException {
             Location location_source = locationService.findByLocationno(locationno_source);
-            String locationid_source = location_source.getLocationid();
-            String parentname_source = location_source.getParentname();
-            
             Location location_dest = locationService.findByLocationno(locationno_dest);
-            String locationid_dest = location_dest.getLocationid();
-            String parentname_dest = location_dest.getParentname();
-           
             if (location_source == null) {
                 return new ResponseEntity("No location found for ID " + location_source, HttpStatus.NOT_FOUND);  
             } 
+            
             if (location_dest == null) {
                 return new ResponseEntity("No location found for ID " + locationno_dest, HttpStatus.NOT_FOUND);  
             } 
+                       
+            int rootnodestatus = locationService.checkrootnode(locationno_source);     
+            if (rootnodestatus > 0) { 
+                throw new LocationException("Root node cannot be moved");
+            }
             
             location_source.setParentname(location_dest.getLocationid());
             locationService.updateLocation(location_source);
-            
             HttpHeaders headers = new HttpHeaders();
             return new ResponseEntity<Void>(headers, HttpStatus.OK);
-            
         }
         
-        
-        //re-assign  a record
-        /*
-        @RequestMapping(value = "/assign", method = RequestMethod.PUT, headers = "Accept=application/json")
-        public ResponseEntity<String> reassign(@RequestParam("locationno_source") Integer locationno_source, @RequestParam(value="locationno_dest") Integer locationno_dest, @RequestBody Location location) {
-             
-            locationno_source = 126;
-            locationno_dest = 125;
-            
-            
-             Location location_source = locationService.findByLocationno(locationno_source);
-             String locationid_source = location_source.getLocationid();
-             String parentname_source = location_source.getParentname();
-             
-             System.out.println("locationid-source: " + locationno_source);
-             System.out.println("parentname-source: " + parentname_source);
-             
-             
-             Location location_dest = locationService.findByLocationno(locationno_dest);
-             String locationid_dest = location_dest.getLocationid();
-             String parentname_dest = location_dest.getParentname();
-             
-             int assign = locationService.reassign(locationid_source, parentname_source, locationid_dest, parentname_dest);;     
-             if (assign > 0) { 
-                //throw new LocationException("Record cannot be deleted: " + locationno);
-                return new ResponseEntity("Record updated: " + locationno_dest, HttpStatus.NOT_FOUND);
-             }
-             else {
-                 return new ResponseEntity("Record cannot be updated: " + locationno_source, HttpStatus.NOT_FOUND);
-             } 
-        }
-        */
-        
-        
-        
-        
+        //delete location records
         @RequestMapping(value = "/delete/{locationno}", method = RequestMethod.GET)
         public ResponseEntity<Location>  deleteLocation(@PathVariable("locationno") Integer locationno) throws LocationException, SQLException {
-            System.out.println("Fetching & Deleting Location with no " + locationno);
+            
             
             Location location = locationService.findByLocationno(locationno);
             if (location == null) {
@@ -185,28 +134,16 @@ public class LocationController {
                 throw new LocationException("Record cannot be deleted: " + locationno);
                 //return new ResponseEntity("Record: " + locationno + " cannot be deleted", HttpStatus.NOT_FOUND);
             }
-            
-            
+    
             int rootnodestatus = locationService.checkrootnode(locationno);     
             if (rootnodestatus > 0) { 
                 throw new LocationException("Root node cannot be delete");
-            }
-            
-                              
+            }             
             locationService.deleteLocation(locationno);
-            return new ResponseEntity<Location>(HttpStatus.NO_CONTENT);
-                
+            return new ResponseEntity<Location>(HttpStatus.NO_CONTENT);   
         } 
         
         
-        /*
-        @RequestMapping(value = "/add", method = RequestMethod.POST, headers = "Accept=application/json")
-        public ResponseEntity<Void> addLocation(@RequestBody Location location) {         
-         locationService.saveLocation(location);
-         HttpHeaders headers = new HttpHeaders();
-         return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
-        }
-        */
         
         
         @RequestMapping(value = "/add", method = RequestMethod.POST, headers = "Accept=application/json")
@@ -215,11 +152,6 @@ public class LocationController {
             logger.info("creating new location: {}", location);
             int locationidstatus = locationService.LocationExists(location.getLocationid());     
             if (locationidstatus > 0) { 
-                //logger.info("location record with name " + location.getLocationid() + " already exists");
-                //System.out.println(" location record " + location.getLocationid() + " already exist");
-                //return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-                //return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-                //return new ResponseEntity("Record: " + location.getLocationno() + " cannot be deleted", HttpStatus.NOT_FOUND);
                 throw new LocationException(" Location record " + location.getLocationid() + " already exist");
             }
 
@@ -230,19 +162,6 @@ public class LocationController {
             headers.add("Locationno", String.valueOf(location.getLocationno()));
             ResponseEntity<Void> responseEntity = new ResponseEntity<Void> (headers, HttpStatus.CREATED);
             
-            
-            
-            //var response = Request.CreateResponse(HttpStatusCode.OK, createdItemId);
-            //response.Headers.Location = new Uri(Url.Link("SomeRoutes", new { id = createdItem }));
-
-//            var corsResult = new CorsResult();
-//            corsResult.AllowedExposedHeaders.Add("Location");
-//            response.WriteCorsHeaders(corsResult);
-//            
-            
-            
-            
-            //return new ResponseEntity(location.getLocationno(), HttpStatus.CREATED);
             return responseEntity;
         }
         
@@ -270,19 +189,7 @@ public class LocationController {
             return new ResponseEntity(location, HttpStatus.OK);
         }
         
-        /*
-        @RequestMapping(value="/deletelocation/{locationno}" )
-        public Location getCustomerById(@PathVariable Integer locationno) throws CustomerNotFoundException
-        {
-        return locationService.findByLocationno(locationno);
-        }
-
-        @ResponseStatus(value="HttpStatus.NOT_FOUND",reason="This customer is not found in the system")
-        public class CustomerNotFoundException extends Exception 
-        {
-        private static final long serialVersionUID = 100L;
-        }
-        */
+       
         
         
         @ExceptionHandler({LocationException.class, java.sql.SQLException.class})
