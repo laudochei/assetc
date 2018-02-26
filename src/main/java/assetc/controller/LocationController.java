@@ -138,7 +138,18 @@ public class LocationController {
             int rootnodestatus = locationService.checkrootnode(locationno);     
             if (rootnodestatus > 0) { 
                 throw new LocationException("Root node cannot be delete");
-            }             
+            } 
+            
+            
+            int childstatus = locationService.LocationHasChild(location.getLocationid());     
+            if (childstatus > 0) { 
+                throw new LocationException("Node cannot be delete because it has a child!");
+            } 
+            
+            
+
+
+            
             locationService.deleteLocation(locationno);
             return new ResponseEntity<Location>(HttpStatus.NO_CONTENT);   
         } 
