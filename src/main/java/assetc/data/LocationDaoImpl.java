@@ -252,6 +252,16 @@ public class LocationDaoImpl implements LocationDao {
         
         
         @Override
+        public int LocationHasChild(String locationid) {
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("parentname", locationid);
+            String sql = "SELECT count(*) FROM location WHERE parentname = :parentname";
+            int count = namedParameterJdbcTemplate.queryForObject(sql, params, Integer.class);
+            return count;
+        }
+        
+        
+        @Override
 	public void saveLocation(Location location) {
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -348,12 +358,43 @@ public class LocationDaoImpl implements LocationDao {
 				e.printStackTrace();
 			}
 		}
-		return jsonstring; //genres;
-
-
-                
+		return jsonstring; //genres;  
 	}
         
+        
+        @Override
+	public void reassign(String locationid_source, String parentname_source, String locationid_dest, String parentname_dest, Location location) {
+               
+                location.setParentname(locationid_dest);
+                                
+                
+                //System.out.println("I am here!!");
+                
+                //Map<String, Object> params = new HashMap<String, Object>();
+                //params.put("locationid", locationid_source);
+                //params.put("parentname", locationid_dest);
+                //params.put("locationid", locationid_dest);
+                //params.put("parentname", parentname_dest);
+                
+                //System.out.println("locationid-source-IMP: " + locationid_source);
+                //System.out.println("parentname-source-IMP: " + parentname_source);
+                
+                //System.out.println("locationid-dest-IMP: " + locationid_dest);
+                //System.out.println("parentname-dest-IMP: " + parentname_dest);
+                
+                //System.out.println("Modified: " + location.getParentname());
+                
+                
+                //String sql = "UPDATE LOCATION SET LOCATIONNO=:locationno, PARENTNAME=:location_dest, DESCRIPTION=:description, LONGDESCRIPTION=:longdescription, PARENTCRAFT=:parentcraft, CRAFT=:craft, EQUIPMENTTYPE=:equipmenttype, FAILURECODE=:failurecode, SYSTEMSTATUS=:systemstatus, USERSTATUS=:userstatus, CRITICALITY=:criticality, CO=:co, SUD=:sud, PLANNINGPLANT=:planningplant, MAINTENANCEPLANT=:maintenanceplant, PHYSICALLOCATION=:physicallocation, MANUFACTURER=:manufacturer, PARTNUM=:partnum, MODELNUM=:modelnum, SERIALNUM=:serialnum, CUSTOMFIELD=:customfield WHERE locationid=:locationid-source";
+                //namedParameterJdbcTemplate.update(sql, getSqlParameterByModel(location));
+                
+                String sql = "UPDATE LOCATION SET LOCATIONNO=:locationno, PARENTNAME=:parentname, DESCRIPTION=:description, LONGDESCRIPTION=:longdescription, PARENTCRAFT=:parentcraft, CRAFT=:craft, EQUIPMENTTYPE=:equipmenttype, FAILURECODE=:failurecode, SYSTEMSTATUS=:systemstatus, USERSTATUS=:userstatus, CRITICALITY=:criticality, CO=:co, SUD=:sud, PLANNINGPLANT=:planningplant, MAINTENANCEPLANT=:maintenanceplant, PHYSICALLOCATION=:physicallocation, MANUFACTURER=:manufacturer, PARTNUM=:partnum, MODELNUM=:modelnum, SERIALNUM=:serialnum, CUSTOMFIELD=:customfield WHERE locationid=:locationid";
+                namedParameterJdbcTemplate.update(sql, getSqlParameterByModel(location));
+                
+                //System.out.println("Assign: ");
+                 
+		//return result;
+        }
         
 
 	private SqlParameterSource getSqlParameterByModel(Location location) {

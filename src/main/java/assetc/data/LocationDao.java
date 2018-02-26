@@ -32,7 +32,7 @@ public interface LocationDao {
         Location updateSingleLocation(Integer locationno, Location location);
         String findJsonTree(String locationid);
         int checkrootnode(Integer locationno);
-        
-        
+        void reassign(String locationid_source, String parentname_source, String locationid_dest, String parentname_dest, Location location); //Integer locationno_dest, String parentname_source, String parentname_dest);
+        int LocationHasChild(String locationid);
     
 }
