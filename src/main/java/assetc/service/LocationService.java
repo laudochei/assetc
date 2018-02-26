@@ -28,7 +28,8 @@ public interface LocationService {
     String findJsonTree(String locationid);
     int deleteException(String locationid);
     int checkrootnode(Integer locationno);
-    
+    void reassign(String locationid_source, String parentname_source, String locationid_dest, String parentname_dest, Location location);
+    int LocationHasChild(String locationid);
     
     
     

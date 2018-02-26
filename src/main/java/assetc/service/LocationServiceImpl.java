@@ -113,6 +113,13 @@ public class LocationServiceImpl implements LocationService {
             return locationDao.LocationExists(locationid);
         }
         
+        
+        @Override
+        public int LocationHasChild(String locationid) {
+            return locationDao.LocationHasChild(locationid);
+        }
+        
+        
         @Override
         public int deleteException(String locationid){
             return locationDao.deleteException(locationid);
@@ -164,6 +171,11 @@ public class LocationServiceImpl implements LocationService {
 	public void dragdrop(Location location, String locationid, String parentname){
             locationDao.dragdrop(location, locationid, parentname);
             
+        }
+        
+        @Override
+        public void reassign(String locationid_source, String parentname_source, String locationid_dest, String parentname_dest, Location location) {    
+            locationDao.reassign(locationid_source, parentname_source, locationid_dest, parentname_dest, location);
         }
         
 }
