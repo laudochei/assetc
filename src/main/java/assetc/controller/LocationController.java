@@ -70,6 +70,15 @@ public class LocationController {
         }
         
         
+        
+        //display all children of a particular node when given a locationid
+        @RequestMapping(value = "/siblings/{locationno}", method = RequestMethod.GET)
+	public List<Location> getSiblings(@PathVariable("locationno") Integer locationno,Model model) {
+                Location location = locationService.findByLocationno(locationno);
+                return locationService.findAllChild(location.getParentname());
+        }
+        
+        
         //display all children of a particular node when given a locationid
         @RequestMapping(value = "/children/{locationno}", method = RequestMethod.GET)
 	public List<Location> getAllLocationChild(@PathVariable("locationno") Integer locationno,Model model) {
@@ -145,10 +154,6 @@ public class LocationController {
             if (childstatus > 0) { 
                 throw new LocationException("Node cannot be delete because it has a child!");
             } 
-            
-            
-
-
             
             locationService.deleteLocation(locationno);
             return new ResponseEntity<Location>(HttpStatus.NO_CONTENT);   
