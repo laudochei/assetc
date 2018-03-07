@@ -161,7 +161,7 @@ public class LocationController {
         
               
         
-        //delete location records
+        //show siblings after deleting location records
         @RequestMapping(value = "/SiblingsAfterDelete/{locationno}", method = RequestMethod.GET)
         public List<Location>  siblingsAfterDelete(@PathVariable("locationno") Integer locationno) throws LocationException {  
             Location location = locationService.findByLocationno(locationno);
@@ -189,34 +189,39 @@ public class LocationController {
         } 
         
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         @RequestMapping(value = "/add", method = RequestMethod.POST, headers = "Accept=application/json")
         public ResponseEntity<Void> adddynamicurl(@RequestBody Location location, UriComponentsBuilder ucb) throws LocationException {   
-            //System.out.println("Adding a new location record:" +  location.getLocationid());
             logger.info("creating new location: {}", location);
             int locationidstatus = locationService.LocationExists(location.getLocationid());     
             if (locationidstatus > 0) { 
                 throw new LocationException(" Location record " + location.getLocationid() + " already exist");
             }
-
             locationService.saveLocation(location);
             HttpHeaders headers = new HttpHeaders();
             URI locationUri = ucb.path("/locationapi/").path(String.valueOf(location.getLocationno())).build().toUri();
             headers.setLocation(locationUri);
             headers.add("Locationno", String.valueOf(location.getLocationno()));
             ResponseEntity<Void> responseEntity = new ResponseEntity<Void> (headers, HttpStatus.CREATED);
-            
             return responseEntity;
         }
+        
+        
+        //show details of the added record
+        @RequestMapping(value = "/NodesAfterAdd", method = RequestMethod.POST, headers = "Accept=application/json")
+        public ResponseEntity<Location>  nodesAfterAdd(@RequestBody Location location, UriComponentsBuilder ucb) throws LocationException {  
+            logger.info("creating new location: {}", location);
+            int locationidstatus = locationService.LocationExists(location.getLocationid());     
+            if (locationidstatus > 0) { 
+                throw new LocationException(" Location record " + location.getLocationid() + " already exist");
+            }
+            locationService.saveLocation(location);
+            HttpHeaders headers = new HttpHeaders();
+            URI locationUri = ucb.path("/locationapi/").path(String.valueOf(location.getLocationno())).build().toUri();
+            headers.setLocation(locationUri);
+            headers.add("Locationno", String.valueOf(location.getLocationno()));
+            ResponseEntity<Location> responseEntity = new ResponseEntity<Location> (location, headers, HttpStatus.CREATED);
+            return responseEntity;
+        } 
         
         
         
