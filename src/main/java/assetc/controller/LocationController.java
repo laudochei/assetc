@@ -225,6 +225,24 @@ public class LocationController {
         
         
         
+        
+        //show details of the added record
+        @RequestMapping(value = "/SiblingsAfterAdd", method = RequestMethod.POST, headers = "Accept=application/json")
+        public ResponseEntity<Location>  siblingsAfterAdd(@RequestBody Location location, UriComponentsBuilder ucb) throws LocationException {  
+            logger.info("creating new location: {}", location);
+            int locationidstatus = locationService.LocationExists(location.getLocationid());     
+            if (locationidstatus > 0) { 
+                throw new LocationException(" Location record " + location.getLocationid() + " already exist");
+            }
+            locationService.saveLocation(location);
+            HttpHeaders headers = new HttpHeaders();
+            URI locationUri = ucb.path("/locationapi/").path(String.valueOf(location.getLocationno())).build().toUri();
+            headers.setLocation(locationUri);
+            headers.add("Locationno", String.valueOf(location.getLocationno()));
+            return new ResponseEntity(locationService.findAllChild(location.getParentname()), headers, HttpStatus.OK);
+        } 
+        
+        
         @RequestMapping(value = "/addlocation}", method = RequestMethod.POST, headers = "Accept=application/json")
 	public ResponseEntity<String> addlocation(@RequestBody Location location, UriComponentsBuilder ucb) {
 		Location locationstatus = locationService.findByLocationid(location.getLocationid());
