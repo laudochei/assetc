@@ -46,6 +46,18 @@ public class LocationController {
            return locationService.findAllLocation();
         }
         
+             
+                
+        @RequestMapping(value = "/locationmultilist", method=GET)
+        public  List<Location> showMultiList(Model model) {
+           return locationService.findMultiList();
+        }
+        
+        @RequestMapping(value = "/locationlist/{numofrecords}", method=GET)
+        public  List<Location> showListRange(@PathVariable("numofrecords") Integer numofrecords, Model model) {
+           return locationService.findMultiList(numofrecords);
+        }
+        
         
         
         //display a single record
