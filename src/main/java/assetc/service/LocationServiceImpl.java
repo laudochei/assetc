@@ -37,6 +37,16 @@ public class LocationServiceImpl implements LocationService {
 		return locationDao.findAll();
 	}
         
+        @Override
+	public List<Location> findMultiList() {
+		return locationDao.findMultiList();
+	}
+        
+        @Override
+	public List<Location> findMultiList(Integer numOfrecords) {
+		return locationDao.findMultiList(numOfrecords);
+	}
+        
        @Override
         public Location findByLocationno(Integer locationno) {    
             return locationDao.findByNo(locationno);
