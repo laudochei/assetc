@@ -120,13 +120,9 @@ public class LocationDaoImpl implements LocationDao {
         // this function returns hierarchical data
         @Override
 	public List<Location> findChildrenofNode(String locationid) {
-            
             String sql = "select e.*, (SELECT COUNT(*) FROM location WHERE parentname = e.locationid) AS DirectReports from location As e HAVING DirectReports > 0";
             List<Location> result = namedParameterJdbcTemplate.query(sql, new LocationMapper());
-            return result;
-                
-                
-                       
+            return result;          
         }
         
         
@@ -206,6 +202,24 @@ public class LocationDaoImpl implements LocationDao {
 	}
 
         
+        
+        
+        
+        @Override
+	public List<Location> findMultiList() {
+                String sql = "select e.*, (SELECT COUNT(*) FROM location WHERE parentname = e.locationid) AS DirectReports from location As e LIMIT 500";
+		List<Location> result = namedParameterJdbcTemplate.query(sql, new LocationMapper());
+		return result;
+        }      
+             
+        
+        @Override
+	public List<Location> findMultiList(Integer numOfrecords) {
+                String sql = "select e.*, (SELECT COUNT(*) FROM location WHERE parentname = e.locationid) AS DirectReports from location As e LIMIT " + numOfrecords + " ";
+		List<Location> result = namedParameterJdbcTemplate.query(sql, new LocationMapper());
+		return result;
+        }
+                
         @Override
 	public void deleteLocation(Integer locationno) {
 		String sql = "DELETE FROM LOCATION WHERE locationno= :locationno";
