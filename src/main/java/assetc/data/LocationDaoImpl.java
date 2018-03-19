@@ -19,10 +19,11 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import assetc.model.Location;
+import static java.lang.Math.log;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sql.DataSource;
@@ -204,18 +205,34 @@ public class LocationDaoImpl implements LocationDao {
         
         
         
+        public int countRowsInTable() { 
+            String sql = "SELECT count(*) FROM location"; 
+            int count = namedParameterJdbcTemplate.queryForObject(sql, Collections.EMPTY_MAP, Integer.class); 
+            return count; 
+        } 
+        
+        
         
         @Override
-	public List<Location> findMultiList() {
-                String sql = "select e.*, (SELECT COUNT(*) FROM location WHERE parentname = e.locationid) AS DirectReports from location As e LIMIT 500";
-		List<Location> result = namedParameterJdbcTemplate.query(sql, new LocationMapper());
+	public List<Location> findMultiList(Integer numofrecords, Integer pageno) {
+                int offsetvalue = numofrecords*pageno;
+                String sql = "select e.*, (SELECT COUNT(*) FROM location WHERE parentname = e.locationid) AS DirectReports from location As e ORDER BY locationno LIMIT " + numofrecords + " OFFSET " + offsetvalue + " ";
+                List<Location> result = namedParameterJdbcTemplate.query(sql, new LocationMapper());
 		return result;
         }      
+        
+        @Override
+	public List<Location> findMultiListRange(Integer numofrecords, Integer startposition) {
+                String sql = "select e.*, (SELECT COUNT(*) FROM location WHERE parentname = e.locationid) AS DirectReports from location As e ORDER BY locationno LIMIT " + numofrecords + " OFFSET " + startposition + " ";
+                List<Location> result = namedParameterJdbcTemplate.query(sql, new LocationMapper());
+		return result;
+        }    
+        
              
         
         @Override
 	public List<Location> findMultiList(Integer numOfrecords) {
-                String sql = "select e.*, (SELECT COUNT(*) FROM location WHERE parentname = e.locationid) AS DirectReports from location As e LIMIT " + numOfrecords + " ";
+                String sql = "select e.*, (SELECT COUNT(*) FROM location WHERE parentname = e.locationid) AS DirectReports from location As e ORDER BY locationno LIMIT " + numOfrecords + " ";
 		List<Location> result = namedParameterJdbcTemplate.query(sql, new LocationMapper());
 		return result;
         }
