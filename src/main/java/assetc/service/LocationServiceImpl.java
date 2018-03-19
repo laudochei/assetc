@@ -38,9 +38,15 @@ public class LocationServiceImpl implements LocationService {
 	}
         
         @Override
-	public List<Location> findMultiList() {
-		return locationDao.findMultiList();
+	public List<Location> findMultiList(Integer numofrecords, Integer pageno) {
+		return locationDao.findMultiList(numofrecords, pageno);
 	}
+        
+        @Override
+	public List<Location> findMultiListRange(Integer numofrecords, Integer pageno) {
+		return locationDao.findMultiListRange(numofrecords, pageno);
+	}
+        
         
         @Override
 	public List<Location> findMultiList(Integer numOfrecords) {
@@ -186,6 +192,11 @@ public class LocationServiceImpl implements LocationService {
         @Override
         public void reassign(String locationid_source, String parentname_source, String locationid_dest, String parentname_dest, Location location) {    
             locationDao.reassign(locationid_source, parentname_source, locationid_dest, parentname_dest, location);
+        }
+        
+        @Override
+        public int countRowsInTable(){
+            return locationDao.countRowsInTable();
         }
         
 }
