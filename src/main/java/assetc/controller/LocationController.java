@@ -7,6 +7,7 @@ import assetc.service.LocationService;
 import assetc.validator.LocationException;
 import assetc.validator.SQLException;
 import java.net.URI;
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -23,9 +24,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
 
-
+@ControllerAdvice
 @RestController
 @RequestMapping(value = "/locationapi")
 public class LocationController {
@@ -47,17 +50,65 @@ public class LocationController {
         }
         
              
-                
+        /*   
         @RequestMapping(value = "/locationmultilist", method=GET)
         public  List<Location> showMultiList(Model model) {
            return locationService.findMultiList();
         }
+        */
         
+        
+        /*
         @RequestMapping(value = "/locationlist/{numofrecords}", method=GET)
-        public  List<Location> showListRange(@PathVariable("numofrecords") Integer numofrecords, Model model) {
+        public  List<Location> showList(@PathVariable("numofrecords") Integer numofrecords, Model model) {
            return locationService.findMultiList(numofrecords);
         }
+        */
         
+        
+        
+        
+        @RequestMapping(value = "/locationlist/{numofrecords}", method=GET)
+        public  ResponseEntity<Location> showList(@PathVariable("numofrecords") Integer numofrecords, Model model) {          
+            int numoftablerows = locationService.countRowsInTable();
+            int numofpages = numoftablerows/numofrecords;
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Numofrecords", String.valueOf(numofrecords));
+            headers.add("Numoftablerows", String.valueOf(numoftablerows));
+            headers.add("Numofpages", String.valueOf(numofpages));
+            return new ResponseEntity(locationService.findMultiList(numofrecords), headers, HttpStatus.OK);
+        }
+        
+        
+        @RequestMapping(value = "/locationpage/{numofrecords}/{pageno}", method=GET)
+        public ResponseEntity<Location> showPaging(@PathVariable("numofrecords") Integer numofrecords, @PathVariable("pageno") Integer pageno, Model model) {
+            int numoftablerows = locationService.countRowsInTable();
+            int numofpages = numoftablerows/numofrecords;
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Numofrecords", String.valueOf(numofrecords));
+            headers.add("Numoftablerows", String.valueOf(numoftablerows));
+            headers.add("Numofpages", String.valueOf(numofpages));
+            return new ResponseEntity(locationService.findMultiList(numofrecords,pageno), headers, HttpStatus.OK);
+        }
+        
+        
+        @RequestMapping(value = "/locationrange/{numofrecords}/{startposition}", method=GET)
+        public ResponseEntity<Location> showRange(@PathVariable("numofrecords") Integer numofrecords, @PathVariable("startposition") Integer startposition, Model model) {
+            int numoftablerows = locationService.countRowsInTable();
+            int numofpages = numoftablerows/numofrecords;
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Numofrecords", String.valueOf(numofrecords));
+            headers.add("Numoftablerows", String.valueOf(numoftablerows));
+            headers.add("Numofpages", String.valueOf(numofpages));
+            headers.add("startposition", String.valueOf(startposition));
+            return new ResponseEntity(locationService.findMultiListRange(numofrecords,startposition), headers, HttpStatus.OK);
+        }
+        
+        
+        
+                    
+            
+            
         
         
         //display a single record
@@ -183,7 +234,7 @@ public class LocationController {
             
             int locationidstatus = locationService.deleteException(location.getLocationid());     
             if (locationidstatus > 0) { 
-                throw new LocationException("Record cannot be deleted: " + locationno);
+                throw new LocationException("Record cannot be deleted for location ID: " + location.getLocationid());
             }
     
             int rootnodestatus = locationService.checkrootnode(locationno);     
@@ -287,5 +338,9 @@ public class LocationController {
 		error.setMessage(ex.getMessage());
 		return new ResponseEntity<Error>(error, HttpStatus.OK);
 	}
+        
+        
+        
+
 
 }
