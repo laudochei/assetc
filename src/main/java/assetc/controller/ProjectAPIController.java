@@ -67,7 +67,7 @@ public class ProjectAPIController {
         public ResponseEntity<String> adddProject(@RequestBody Project project, UriComponentsBuilder ucb) throws MessageException {   
             int projectidstatus = projectService.ProjectIDExists(project.getProjectid());     
             if (projectidstatus > 0) { 
-                throw new MessageException(" Message record " + project.getProjectid() + " already exist");
+                throw new MessageException("Record already exist for Project with ID: " + project.getProjectid() + " already exist");
             }
             projectService.saveProject(project);
             HttpHeaders headers = new HttpHeaders();
