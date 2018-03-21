@@ -49,25 +49,7 @@ public class LocationController {
            return locationService.findAllLocation();
         }
         
-             
-        /*   
-        @RequestMapping(value = "/locationmultilist", method=GET)
-        public  List<Location> showMultiList(Model model) {
-           return locationService.findMultiList();
-        }
-        */
-        
-        
-        /*
-        @RequestMapping(value = "/locationlist/{numofrecords}", method=GET)
-        public  List<Location> showList(@PathVariable("numofrecords") Integer numofrecords, Model model) {
-           return locationService.findMultiList(numofrecords);
-        }
-        */
-        
-        
-        
-        
+       
         @RequestMapping(value = "/locationlist/{numofrecords}", method=GET)
         public  ResponseEntity<Location> showList(@PathVariable("numofrecords") Integer numofrecords, Model model) {          
             int numoftablerows = locationService.countRowsInTable();
@@ -100,15 +82,10 @@ public class LocationController {
             headers.add("Numofrecords", String.valueOf(numofrecords));
             headers.add("Numoftablerows", String.valueOf(numoftablerows));
             headers.add("Numofpages", String.valueOf(numofpages));
-            headers.add("startposition", String.valueOf(startposition));
+            headers.add("Startposition", String.valueOf(startposition));
             return new ResponseEntity(locationService.findMultiListRange(numofrecords,startposition), headers, HttpStatus.OK);
         }
         
-        
-        
-                    
-            
-            
         
         
         //display a single record
