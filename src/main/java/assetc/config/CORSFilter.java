@@ -20,7 +20,7 @@ public class CORSFilter implements Filter {
 		response.setHeader("Access-Control-Max-Age", "3600");
 		response.setHeader("Access-Control-Allow-Headers", "X-requested-with, Content-Type");
                 //response.setHeader("Access-Control-Expose-Headers", "Location, Locationno");
-                response.setHeader("Access-Control-Expose-Headers", "Location, Locationno, Numofrecords, Numoftablerows,Numoftablerows, Startposition");
+                response.setHeader("Access-Control-Expose-Headers", "Location, Locationno, Numofrecords, Numofpages, Numoftablerows, Numoftablerows, Startposition");
 		chain.doFilter(req, res);
 	}
 
