@@ -161,7 +161,13 @@
                     <artifactId>postgresql</artifactId>
                     <version>9.1-901.jdbc4</version>
                 </dependency>
-
+		
+	    <dependency>
+	    <groupId>com.newrelic.agent.java</groupId>
+	    <artifactId>newrelic-agent</artifactId>
+	    <version>3.5.1</version>
+	    <scope>provided</scope>
+	    </dependency>
                     
                 
     </dependencies>
