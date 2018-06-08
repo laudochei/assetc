@@ -162,12 +162,16 @@
                     <version>9.1-901.jdbc4</version>
                 </dependency>
 		
-	    <dependency>
-	    <groupId>com.newrelic.agent.java</groupId>
-	    <artifactId>newrelic-agent</artifactId>
-	    <version>3.5.1</version>
-	    <scope>provided</scope>
-	    </dependency>
+	        
+	    <dependency> 
+ 		<groupId>com.newrelic.agent.java</groupId>
+ 		<artifactId>newrelic-java</artifactId>
+ 		<version>4.1.0</version>
+ 		<scope>provided</scope>
+ 		<type>zip</type>
+	   </dependency> 
+	    
+	    
                     
                 
     </dependencies>
@@ -241,56 +245,33 @@
                 </execution>
             </executions>
         </plugin>
-		
-	<plugin>
-        <groupId>com.heroku.sdk</groupId>
-        <artifactId>heroku-maven-plugin</artifactId>
-        <version>1.0.3</version>
-          <configuration>
-              <appName>java-heroku-newrelic-sample</appName>
-              <jdkVersion>1.8</jdkVersion>
-              <processTypes>
-                  <web>java $JAVA_OPTS -Dserver.port=$PORT -jar target/microservice-1.0.0.jar</web>
-              </processTypes>
-              <configVars>
-                  <JAVA_OPTS>-javaagent:target/newrelic.jar</JAVA_OPTS>
-              </configVars>
-              <includes>
-  <include>*</include>
-  </includes>
-          </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>3.0.1</version>
+	
+	
+		<plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.0.2</version>
         <executions>
           <execution>
-            <id>copy-resources</id>
-            <phase>validate</phase>
+            <id>unpack-newrelic</id>
+            <phase>package</phase>
             <goals>
-              <goal>copy-resources</goal>
+              <goal>unpack-dependencies</goal>
             </goals>
             <configuration>
-              <outputDirectory>${basedir}/target/</outputDirectory>
-              <resources>          
-                <resource>
-                  <directory>../../../target/</directory>
-                    <includes>
-             <include>microservice-1.0.0.jar</include>
-          </includes>
-                </resource>
-                <resource>
-                  <directory>../newrelic/</directory>
-                    <includes>
-             <include>newrelic.jar</include>
-             <include>newrelic.yml</include>
-          </includes>
-                </resource>
-              </resources>              
-            </configuration>            
+              <includeGroupIds>com.newrelic.agent.java</includeGroupIds>
+              <includeArtifactIds>newrelic-java</includeArtifactIds>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>false</overWriteSnapshots>
+              <overWriteIfNewer>true</overWriteIfNewer>
+              <outputDirectory>${project.basedir}</outputDirectory>
+              <destFileName>newrelic</destFileName
+            </configuration>
           </execution>
         </executions>
       </plugin>
+		
+
 
         </plugins>
     </build>
